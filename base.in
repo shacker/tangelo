@@ -1,2 +1,4 @@
 django
 django-extensions
+black
+flake8
