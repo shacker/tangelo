@@ -302,6 +302,7 @@ tags
 pyvenv.cfg
 pip-selfcheck.json
 
-tangerine
 tangelo/media/
 local.py
+tangelo/db.sqlite3
+*.sqlite3
