@@ -17,6 +17,7 @@ class CategoryPage(TimeStampedModel):
     """
 
     title = models.CharField(max_length=120, help_text="Unique name for this service.", unique=True)
+    slug = models.CharField(max_length=16, help_text="Slugified version of this category title.", unique=True)
     about = models.TextField(help_text="Some info about this category")
 
     def __str__(self) -> str:

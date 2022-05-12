@@ -1,0 +1,5 @@
+
+
+{% for image in images %}
+    <a href="{% url "image" image.flickr_id %}">{{ image.flickr_id }} - {{ image.title }}</a>,
+{% endfor %}
