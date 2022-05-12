@@ -3,14 +3,6 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 
-# class HomePage(TimeStampedModel):
-#     """
-#     Stores settings related to defined Greenhouse services.
-#     """
-
-#     models.TextField(help_text="Intro text to be displayed")
-
-
 class CategoryPage(TimeStampedModel):
     """
     Stores settings related to defined Greenhouse services.
