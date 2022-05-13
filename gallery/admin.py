@@ -6,7 +6,7 @@ admin.site.register(Category)
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("flickr_id", "title")
+    list_display = ("title", "flickr_id")
 
 
 admin.site.register(Image, ImageAdmin)

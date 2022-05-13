@@ -15,7 +15,7 @@ class Category(TimeStampedModel):
         help_text="Slugified version of this category title for use in URLs.",
         unique=True,
     )
-    about = models.TextField(help_text="Optional additional information this category")
+    about = models.TextField(help_text="Optional additional information this category", blank=True)
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -30,7 +30,7 @@ class Image(TimeStampedModel):
     title and description from Flickr in real-time. Keep description at all?
     """
 
-    flickr_id = models.IntegerField(help_text="Unique Flickr ID for each image")
+    flickr_id = models.BigIntegerField(help_text="Unique Flickr ID for each image")
     title = models.CharField(
         max_length=120,
         help_text="Title auto-copied from Flickr title, can be overridden",

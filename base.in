@@ -1,6 +1,6 @@
+black
 django
 django-extensions
-black
 flake8
 icecream
-
+psycopg2
