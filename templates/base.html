@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+   <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link href="{% static 'css/sticky-footer.css' %}" rel="stylesheet">
+
+    {# enable Simple-Line-Icons #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" integrity="sha512-QKC1UZ/ZHNgFzVKSAhV5v5j73eeL9EEN289eKAEFaAjgAiobVAnVv/AGuPbXsKl1dNoel3kNr6PYnSiTzVVBCw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>{% block title %}shacker.net{% endblock title %}</title>
+   </head>
+   <body>
+    <header class="site-header">
+     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <div class="container">
+         <a class="navbar-brand mr-4" href="{% url 'home' %}">Testrunner</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarToggle">
+          <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="">{{ project.name }} About</a>
+              <a class="nav-item nav-link" href="">{{ project.name }} Bio</a>
+          </div>
+          <!-- Navbar Right Side -->
+          <div class="navbar-nav">
+            Login
+          </div>
+         </div>
+      </div>
+     </nav>
+    </header>
+    <main role="main" class="container">
+     <div class="row">
+      <div class="col-md-12">
+         {%  if messages %}
+          {% for message in messages %}
+           <div class="alert alert-{{ message.tags }}">
+           {{ message|safe }}
+           </div>
+          {%  endfor %}
+         {% endif %}
+         {% block content %}{% endblock %}
+      </div>
+     </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted text-center">
+         All images © Scot Hacker {% now "Y" %} | More: <a href="https://www.flickr.com/photos/shacker/">shacker on flickr</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Required JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+   {# Inner pages may include additional javascript #}
+   {% block extra_js %}{% endblock extra_js %}
+
+   </body>
+</html>

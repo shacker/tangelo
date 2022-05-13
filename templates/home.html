@@ -1,5 +1,11 @@
-hello
+{% extends 'base.html' %}
 
-{% for category in categories %}
-    <a href="{% url 'category' category.slug %}">{{ category.title }}</a>
-{% endfor %}
+{% block title %}images by shacker{% endblock title %}
+
+{% block content %}
+
+    {% for category in categories %}
+        <a href="{% url 'category' category.slug %}">{{ category.title }}</a>
+    {% endfor %}
+
+{% endblock content %}

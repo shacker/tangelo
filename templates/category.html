@@ -1,7 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}images by shacker{% endblock title %}
+
+{% block content %}
+
+    {% for image in images %}
+        <a href="{% url "image" image.flickr_id %}">{{ image.flickr_id }} - {{ image.title }}</a>,
+    {% empty %}
+        <p>No images to show in this category, sorry.</p>
+    {% endfor %}
+
+{% endblock content %}
 
 
-{% for image in images %}
-    <a href="{% url "image" image.flickr_id %}">{{ image.flickr_id }} - {{ image.title }}</a>,
-{% empty %}
-    <p>No images to show in this category, sorry.</p>
-{% endfor %}
+
+
+
