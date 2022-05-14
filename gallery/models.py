@@ -3,6 +3,7 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 
+
 class Category(TimeStampedModel):
 
     title = models.CharField(
@@ -42,6 +43,40 @@ class Image(TimeStampedModel):
     categories = models.ManyToManyField(
         Category, help_text="An image can exist in many categories at once."
     )
+
+    # Since an image can belong to more than one category, album_order is ambiguous when
+    # image is in multiple categories, but letting that slide for now...
+    album_order = models.IntegerField(
+        help_text="Controls ordering of image within albums, and next/prev links."
+    )
+
+    def get_next_id(self, curr_id):
+        """Find the next Image in this album, based on `album_order`."""
+
+        try:
+            _ret = (
+                Image.objects.filter(album_order__gte=self.album_order)
+                .exclude(id=self.id)
+                .order_by("album_order", "id")
+                .first()
+            )
+        except Image.DoesNotExist:
+            _ret = None
+        return _ret
+
+    def get_previous_id(self, curr_id):
+        """Find the previous Image in this album, based on `album_order`."""
+
+        try:
+            _ret = (
+                Image.objects.filter(album_order__lte=self.album_order)
+                .exclude(id=self.id)
+                .order_by("-album_order", "-id")
+                .first()
+            )
+        except Image.DoesNotExist:
+            _ret = None
+        return _ret
 
     def __str__(self) -> str:
         return str(self.flickr_id)

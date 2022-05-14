@@ -4,14 +4,22 @@
 
 {% block content %}
 
-    <h2>{{ title }}</h2>
+    <h2>{{ flickr.title }}</h2>
     <a
         data-flickr-embed="true"
-        href="{{ page_url }}"
-        title="{{ title }}">
-            <img src="{{ embed_url }}" alt="{{ title }}">
+        href="{{ flickr.page_url }}"
+        title="{{ flickr.title }}">
+            <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
     </a>
-    <p>{{ description }}</p>
+    <p>{{ flickr.description }}</p>
 
+    {% if previous_id %}
+        <a href="{% url "image" previous_id %}">Previous</a>
+        {% if next_id %}|{% endif %}
+    {% endif %}
+
+    {% if next_id %}
+        <a href="{% url "image" next_id %}">Next</a>
+    {% endif %}
 
 {% endblock content %}

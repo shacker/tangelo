@@ -6,7 +6,10 @@ admin.site.register(Category)
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("title", "flickr_id")
+    list_display = ("title", "flickr_id", "albums", "album_order")
+
+    def albums(self, obj):
+        return list(obj.categories.values_list("title", flat=True))
 
 
 admin.site.register(Image, ImageAdmin)
