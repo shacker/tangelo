@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+
+from .config import config  # Load secrets from settings.conf
+
+config.load()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +28,13 @@ ROOT_DIR = BASE_DIR.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "88J0@)ek6sd!mvw9)ui0+8(84rd&(fhrl6f2v0b&y+eey)w)igs#n"
+# SECRET_KEY = "88J0@)ek6sd!mvw9)ui0+8(84rd&(fhrl6f2v0b&y+eey)w)igs#n"
+SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
 
 # Application definition
@@ -73,14 +80,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "tangelo.tangelo.wsgi.application"
 
-
-# Database
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "tangelo",
-    }
-}
+DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 
 
 # Password validation
@@ -119,12 +119,17 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = config.STATIC_ROOT
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+FLICKR_API_KEY = config.FLICKR_API_KEY
+FLICKR_API_SECRET = config.FLICKR_API_SECRET
+FLICKR_USERNAME = config.FLICKR_USERNAME
+FLICKR_USER_ID = config.FLICKR_USER_ID

@@ -1,7 +1,10 @@
 black
 django
 django-extensions
+dj-database-url
 flake8
 flickrapi
+goodconf
 icecream
 psycopg2
+ruamel.yaml  # Used by goodconf

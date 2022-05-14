@@ -23,7 +23,7 @@ def get_api_image_data(flickr_id: int, size: str = "b"):
 
     Args:
         flickr_id: int
-        size: Suffix mapping, per URL docs - defaults to 1024 on the long side
+        size: Optional suffix mapping, per URL docs - defaults to 1024 on the long side
 
     Returns
         ImageData dataclass instance as above
@@ -39,10 +39,10 @@ def get_api_image_data(flickr_id: int, size: str = "b"):
     embed_url = f"https://live.staticflickr.com/{server}/{flickr_id}_{secret}_{size}.jpg"
 
     image_data = ImageData(
-        embed_url=embed_url,
-        page_url=photo["urls"]["url"][0]["_content"],
-        description=photo["description"]["_content"],
         title=photo["title"]["_content"],
+        description=photo["description"]["_content"],
+        page_url=photo["urls"]["url"][0]["_content"],
+        embed_url=embed_url,
     )
 
     return image_data
