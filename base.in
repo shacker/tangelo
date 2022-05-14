@@ -2,5 +2,6 @@ black
 django
 django-extensions
 flake8
+flickrapi
 icecream
 psycopg2

@@ -4,6 +4,14 @@
 
 {% block content %}
 
-    {{ image.flickr_id }}
+    <h2>{{ title }}</h2>
+    <a
+        data-flickr-embed="true"
+        href="{{ page_url }}"
+        title="{{ title }}">
+            <img src="{{ embed_url }}" alt="{{ title }}">
+    </a>
+    <p>{{ description }}</p>
+
 
 {% endblock content %}
