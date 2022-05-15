@@ -5,7 +5,14 @@
 {% block content %}
 
     {% for category in categories %}
-        <a href="{% url 'category' category.slug %}">{{ category.title }}</a>
+
+        <div class="mb-4">
+            <a href="{% url 'category' category.slug %}">
+                {% include "partials/gallery/thumbnail.html" with thumbnail=category.get_thumbnail %}
+            </a><br />
+            <a href="{% url 'category' category.slug %}">{{ category.title }}</a>
+        </div>
+
     {% endfor %}
 
 {% endblock content %}

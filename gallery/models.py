@@ -1,7 +1,8 @@
 from django.db import models
-
+from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
-
+from gallery.utils import get_api_image_data
+from dataclasses import asdict
 
 
 class Category(TimeStampedModel):
@@ -18,8 +19,26 @@ class Category(TimeStampedModel):
     )
     about = models.TextField(help_text="Optional additional information this category", blank=True)
 
+    cat_thumb = models.ForeignKey(
+        "gallery.Image",
+        verbose_name=("Category Thumbnail"),
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="Each category should be associated with one of the images in that category, to be used in web layouts.",
+    )
+
     class Meta:
         verbose_name_plural = "Categories"
+
+    def get_thumbnail(self):
+        """Using the `cat_thumb` field on this category, get thumbnail image for this cat via Flickr API."""
+
+        flickr_data = None
+        if self.cat_thumb:
+            flickr_data = asdict(get_api_image_data(self.cat_thumb.flickr_id, size=settings.FLICKR_THUMBNAIL_SIZE))
+
+        return flickr_data
 
     def __str__(self) -> str:
         return self.title
@@ -50,6 +69,12 @@ class Image(TimeStampedModel):
         help_text="Controls ordering of image within albums, and next/prev links."
     )
 
+    def get_thumbnail(self):
+        """Get a thumbnail version of this image via Flickr API."""
+
+        flickr_data = asdict(get_api_image_data(self.flickr_id, size=settings.FLICKR_THUMBNAIL_SIZE))
+        return flickr_data
+
     def get_next_id(self, curr_id):
         """Find the next Image in this album, based on `album_order`."""
 
@@ -58,9 +83,9 @@ class Image(TimeStampedModel):
                 Image.objects.filter(album_order__gte=self.album_order)
                 .exclude(id=self.id)
                 .order_by("album_order", "id")
-                .first()
+                .first().flickr_id
             )
-        except Image.DoesNotExist:
+        except (Image.DoesNotExist, AttributeError):
             _ret = None
         return _ret
 
@@ -72,11 +97,11 @@ class Image(TimeStampedModel):
                 Image.objects.filter(album_order__lte=self.album_order)
                 .exclude(id=self.id)
                 .order_by("-album_order", "-id")
-                .first()
+                .first().flickr_id
             )
-        except Image.DoesNotExist:
+        except (Image.DoesNotExist, AttributeError):
             _ret = None
         return _ret
 
     def __str__(self) -> str:
-        return str(self.flickr_id)
+        return f"{self.title} ({str(self.flickr_id)})"

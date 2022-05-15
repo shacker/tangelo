@@ -1,0 +1,5 @@
+{% if thumbnail %}
+  <img src="{{ thumbnail.embed_url }}" alt="Thumbnail image for category ({{ thumbnail.title }})">
+{% else %}
+  <img src="/static/img/goat.jpeg" alt="Missing placeholder (baby goat)">
+{% endif %}

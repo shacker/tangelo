@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}images by shacker{% endblock title %}
+{% block title %}{{ flickr.title }}{% endblock title %}
 
 {% block content %}
 
@@ -21,5 +21,7 @@
     {% if next_id %}
         <a href="{% url "image" next_id %}">Next</a>
     {% endif %}
+
+   |  <a href="{{ flickr.page_url }}" target="_blank">View on Flickr</a>
 
 {% endblock content %}

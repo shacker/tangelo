@@ -5,7 +5,14 @@
 {% block content %}
 
     {% for image in images %}
-        <a href="{% url "image" image.flickr_id %}">{{ image.flickr_id }} - {{ image.title }} Order: {{image.album_order}}</a>,
+
+        <div class="mb-4">
+            <a href="{% url "image" image.flickr_id %}">
+                {% include "partials/gallery/thumbnail.html" with thumbnail=image.get_thumbnail %}
+            </a><br />
+            <a href="{% url "image" image.flickr_id %}">{{ image.title }}<br />
+        </div>
+
     {% empty %}
         <p>No images to show in this category, sorry.</p>
     {% endfor %}
