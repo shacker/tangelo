@@ -3,6 +3,7 @@ import os
 import dj_database_url
 
 from .config import config  # Load secrets from settings.conf
+
 config.load()
 
 
@@ -83,6 +84,18 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+
+CACHES = {
+    "default": {
+        "BACKEND": config.CACHE_BACKEND,
+        "LOCATION": "redis://127.0.0.1:6379",
+        "KEY_PREFIX": "tangelo",
+    }
+}
+# Cache lifetime - 1 year default (superuser use Clear Cache link on site)
+CACHE_TTL = config.CACHE_TTL
+
 
 
 # Internationalization

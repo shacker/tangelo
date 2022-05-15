@@ -7,4 +7,5 @@ flickrapi
 goodconf
 icecream
 psycopg2
+redis
 ruamel.yaml  # Used by goodconf

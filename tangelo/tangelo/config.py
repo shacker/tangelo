@@ -26,6 +26,9 @@ class AppConfig(GoodConf):
     MEDIA_ROOT = Field(default=str(PROJECT_ROOT / "media"))
     STATIC_ROOT = Field(default=str(PROJECT_ROOT / "static"))
 
+    CACHE_BACKEND = Field(default="django.core.cache.backends.redis.RedisCache")
+    CACHE_TTL = Field(default=(60 * 60 * 24 * 365))  # One year - cache "permanently" until cleared
+
     # ES_IRIS_TOKEN = Field(default="", help="Access token issued by Greenhouse to Iris")
     # ES_GH_TOKEN = Field(default="", help="Access token issued by Iris to Greenhouse")
 

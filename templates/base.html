@@ -27,10 +27,14 @@
           <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="">{{ project.name }} About</a>
               <a class="nav-item nav-link" href="">{{ project.name }} Contact</a>
+              {% if user.is_superuser %}
+                <a class="nav-item nav-link" href="{% url "clear_cache" %}">Clear Cache</a>
+              {% endif %}
+
           </div>
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
-            Login
+            {# empty for now #}
           </div>
          </div>
       </div>
