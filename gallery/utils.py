@@ -1,11 +1,13 @@
 from django.conf import settings
 import flickrapi
 from dataclasses import dataclass
+from django.conf import settings
 
 
 @dataclass
 class ImageData:
-    """Class for storing usable items for displaying a Flickr image."""
+    """Class for storing usable datapoints needed for displaying a Flickr image.
+    Cast back to a dict before sending to template. """
 
     title: str
     description: str
@@ -13,13 +15,15 @@ class ImageData:
     page_url: str
 
 
-def get_api_image_data(flickr_id: int, size: str = "b"):
+def get_api_image_data(flickr_id: int, size: str = settings.FLICKR_IMAGE_SIZE):
     """
     Use Flickr's getInfo() API to get metadata about an image by ID.
     https://www.flickr.com/services/api/flickr.photos.getInfo.html
 
     See also: Flickr URL guidelines:
     https://www.flickr.com/services/api/misc.urls.html
+
+    Image size defaults to "b" i.e. 1024 on the long side.
 
     Args:
         flickr_id: int
