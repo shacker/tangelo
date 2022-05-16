@@ -103,5 +103,16 @@ class Image(TimeStampedModel):
             _ret = None
         return _ret
 
+    def save(self, *args, **kwargs):
+        """ On first save of an image, auto-populate title and description
+        """
+
+        if not self.id:
+            flickr = get_api_image_data(flickr_id=self.flickr_id)
+            self.title = flickr.title
+            self.description = flickr.description
+
+        super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         return f"{self.title} ({str(self.flickr_id)})"
