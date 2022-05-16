@@ -51,3 +51,8 @@ def clear_cache(request):
     """ Clear all caches. Superuser-only (but harmless) """
     call_command("clear_cache")
     return redirect("home")
+
+
+def about(request):
+    """ Just render about template """
+    return render(request, "about.html")
