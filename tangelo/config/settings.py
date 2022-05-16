@@ -1,14 +1,14 @@
-from pathlib import Path
 import os
 import dj_database_url
+from pathlib import Path
 
 from .config import config  # Load secrets from settings.conf
-
 config.load()
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-ROOT_DIR = BASE_DIR.parent
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config.SECRET_KEY
 DEBUG = config.DEBUG
@@ -21,7 +21,7 @@ DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 
 # Static and media files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
 STATIC_ROOT = config.STATIC_ROOT
 MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
@@ -47,12 +47,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "tangelo.tangelo.urls"
+ROOT_URLCONF = "tangelo.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [f"{str(ROOT_DIR)}/templates"],
+        "DIRS": [f"{str(PROJECT_ROOT)}/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -65,7 +65,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "tangelo.tangelo.wsgi.application"
+WSGI_APPLICATION = "tangelo.wsgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

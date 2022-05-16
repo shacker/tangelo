@@ -44,7 +44,7 @@ class AppConfig(GoodConf):
     class Config:
         # Load config from file in GREENHOUSE_CONF env var or `greenhouse.yml` in the cwd
         default_files = [
-            "tangelo/tangelo/local.yml",
+            "tangelo/config/local.yml",
         ]
 
 
@@ -53,7 +53,7 @@ config = AppConfig()
 
 def manage_py():
     """Entrypoint for manage.py"""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tangelo.tangelo.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tangelo.config.settings")
     config.django_manage()
 
 
