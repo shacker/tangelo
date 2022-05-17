@@ -12,8 +12,9 @@ ul {
   margin: 0;
 }
 
+/* Top banner color */
 .bg-steel {
-  background-color: #5f788a;
+  background-color: #356282;
 }
 
 .site-header .navbar-nav .nav-link {

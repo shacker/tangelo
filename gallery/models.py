@@ -50,7 +50,7 @@ class Image(TimeStampedModel):
     title and description from Flickr in real-time. Keep description at all?
     """
 
-    flickr_id = models.BigIntegerField(help_text="Unique Flickr ID for each image")
+    flickr_id = models.BigIntegerField(help_text="Unique Flickr ID for each image", unique=True)
     title = models.CharField(
         max_length=120,
         help_text="Title auto-copied from Flickr title, can be overridden",
@@ -66,7 +66,9 @@ class Image(TimeStampedModel):
     # Since an image can belong to more than one category, album_order is ambiguous when
     # image is in multiple categories, but letting that slide for now...
     album_order = models.IntegerField(
-        help_text="Controls ordering of image within albums, and next/prev links."
+        help_text="Controls ordering of image within albums, and next/prev links.",
+        blank=True,
+        null=True
     )
 
     def get_thumbnail(self):
