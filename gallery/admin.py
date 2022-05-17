@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from gallery.models import Category, Image
 
-admin.site.register(Category)
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -13,5 +12,8 @@ class ImageAdmin(admin.ModelAdmin):
     def albums(self, obj):
         return list(obj.categories.values_list("title", flat=True))
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("title", "order",)
 
 admin.site.register(Image, ImageAdmin)
+admin.site.register(Category, CategoryAdmin)

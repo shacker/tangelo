@@ -19,6 +19,12 @@ class Category(TimeStampedModel):
     )
     about = models.TextField(help_text="Optional additional information this category", blank=True)
 
+    order = models.IntegerField(
+        help_text="Controls ordering of category thumbnails on homepage",
+        blank=True,
+        null=True
+    )
+
     cat_thumb = models.ForeignKey(
         "gallery.Image",
         verbose_name=("Category Thumbnail"),

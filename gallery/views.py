@@ -11,7 +11,7 @@ from itertools import cycle
 @cache_page(settings.CACHE_TTL)
 def home(request):
     """Show about text and array of category thumbnails"""
-    ctx = {"categories": Category.objects.all()}
+    ctx = {"categories": Category.objects.all().order_by("order")}
     return render(request, "home.html", context=ctx)
 
 
