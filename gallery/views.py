@@ -5,6 +5,8 @@ from dataclasses import asdict
 from django.views.decorators.cache import cache_page
 from django.core.management import call_command
 from django.conf import settings
+from itertools import cycle
+
 
 @cache_page(settings.CACHE_TTL)
 def home(request):
@@ -17,12 +19,22 @@ def home(request):
 def category(request, slug: str):
     """Show about text and array of image thumbnails in this category"""
     category = Category.objects.get(slug=slug)
-    ctx = {
-        "images": Image.objects.filter(
+    images = Image.objects.filter(
             categories__in=[
                 category,
             ]
         ).order_by("album_order")
+
+    # For Responsive Image Grid, we will always have four columns, but need to arrange the image set
+    # in rows, respecting album image order left to right. So we set up four lists - one for each column.
+    # Then iterate through images and drop them in columns, in order.
+    columns = [[], [], [], []]
+    cycled_columns = cycle(columns)
+    for image in images:
+        next(cycled_columns).append(image)
+
+    ctx = {
+        "columns": columns
     }
     return render(request, "category.html", context=ctx)
 

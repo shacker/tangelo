@@ -4,17 +4,19 @@
 
 {% block content %}
 
-    {% for image in images %}
+    {% for column in columns %}
+        {% for image in column %}
 
-        <div class="mb-4">
-            <a href="{% url "image" image.flickr_id %}">
-                {% include "partials/gallery/thumbnail.html" with thumbnail=image.get_thumbnail %}
-            </a><br />
-            <a href="{% url "image" image.flickr_id %}">{{ image.title }}<br />
-        </div>
+            <div class="mb-4">
+                <a href="{% url "image" image.flickr_id %}">
+                    {% include "partials/gallery/thumbnail.html" with thumbnail=image.get_thumbnail %}
+                </a><br />
+                <a href="{% url "image" image.flickr_id %}">{{ image.title }} {{ image.album_order }}<br />
+            </div>
 
-    {% empty %}
-        <p>No images to show in this category, sorry.</p>
+        {% empty %}
+            <p>No images to show in this category, sorry.</p>
+        {% endfor %}
     {% endfor %}
 
 {% endblock content %}
