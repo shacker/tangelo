@@ -1,17 +1,20 @@
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}{{ flickr.title }}{% endblock title %}
 
 {% block content %}
 
-    <h2>{{ flickr.title }}</h2>
-    <a
-        data-flickr-embed="true"
-        href="{{ flickr.page_url }}"
-        title="{{ flickr.title }}">
-            <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
-    </a>
-    <p>{{ flickr.description }}</p>
+    {% cache None flickr_full img.flickr_id %}
+        <h2>{{ flickr.title }}</h2>
+        <a
+            data-flickr-embed="true"
+            href="{{ flickr.page_url }}"
+            title="{{ flickr.title }}">
+                <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
+        </a>
+        <p>{{ flickr.description }}</p>
+    {% endcache %}
 
     {% if previous_id %}
         <a href="{% url "image" previous_id %}">Previous</a>

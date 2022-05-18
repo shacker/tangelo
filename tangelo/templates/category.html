@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}images by shacker{% endblock title %}
 
@@ -9,9 +10,12 @@
     {% for column in columns %}
       <div class="column">
         {% for image in column %}
-          <a href="{% url "image" image.flickr_id %}">
-            {% include "partials/gallery/thumbnail.html" with thumbnail=image.get_thumbnail %}
-          </a>
+          {# Cache each image forever with its flickr ID (None = forever) #}
+          {% cache None flickr_thumb image.flickr_id %}
+            <a href="{% url "image" image.flickr_id %}">
+              {% include "partials/gallery/thumbnail.html" with thumbnail=image.get_thumbnail %}
+            </a>
+          {% endcache %}
         {% endfor %}
       </div>
     {% endfor %}
