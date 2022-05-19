@@ -3,6 +3,7 @@ import dj_database_url
 from pathlib import Path
 
 from .config import config  # Load secrets from settings.conf
+
 config.load()
 
 
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "gallery",
+    "markdownify.apps.MarkdownifyConfig",
 ]
 
 MIDDLEWARE = [
@@ -95,7 +97,6 @@ CACHES = {
 }
 # Cache lifetime - 1 year default (superuser use Clear Cache link on site)
 CACHE_TTL = config.CACHE_TTL
-
 
 
 # Internationalization

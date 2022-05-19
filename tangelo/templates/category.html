@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
-{% load cache %}
+{% load cache markdownify %}
 
 {% block title %}images by shacker{% endblock title %}
 
 {% block content %}
 
-  <div class="imagegrid">
+  <h2>{{ category }}</h2>
+  {{ category.about|markdownify }}
+
+  <div class="imagegrid mt-2">
     <div class="row">
     {% for column in columns %}
       <div class="column">

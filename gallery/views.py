@@ -30,6 +30,7 @@ def category(request, slug: str):
         next(cycled_columns).append(image)
 
     ctx = {
+        "category": category,
         "columns": columns
     }
     return render(request, "category.html", context=ctx)

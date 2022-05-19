@@ -1,6 +1,7 @@
 black
 django
 django-extensions
+django-markdownify
 dj-database-url
 flake8
 flickrapi

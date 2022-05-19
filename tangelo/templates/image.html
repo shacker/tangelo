@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load cache %}
+{% load static cache %}
 
 {% block title %}{{ flickr.title }}{% endblock title %}
 
@@ -25,6 +25,10 @@
         <a href="{% url "image" next_id %}">Next</a>
     {% endif %}
 
-   |  <a href="{{ flickr.page_url }}" target="_blank">View on Flickr</a>
+   <p>
+       <a href="{{ flickr.page_url }}" target="_blank">
+           <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
+        </a>
+    </p>
 
 {% endblock content %}
