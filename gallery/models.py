@@ -86,11 +86,13 @@ class Image(TimeStampedModel):
     def get_next_id(self, curr_id):
         """Find the next Image in this album, based on `album_order`."""
 
+        album = Category.objects.get(slug="landscapes")
+
         try:
             _ret = (
-                Image.objects.filter(album_order__gte=self.album_order)
+                Image.objects.filter(category__in=[album,], album_order__gte=self.album_order)
                 .exclude(id=self.id)
-                .order_by("album_order", "id")
+                .order_by("album_order")
                 .first().flickr_id
             )
         except (Image.DoesNotExist, AttributeError):
@@ -99,10 +101,11 @@ class Image(TimeStampedModel):
 
     def get_previous_id(self, curr_id):
         """Find the previous Image in this album, based on `album_order`."""
+        album = Category.objects.get(slug="landscapes")
 
         try:
             _ret = (
-                Image.objects.filter(album_order__lte=self.album_order)
+                Image.objects.filter(category__in=[album,], album_order__lte=self.album_order)
                 .exclude(id=self.id)
                 .order_by("-album_order", "-id")
                 .first().flickr_id

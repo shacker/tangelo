@@ -5,30 +5,32 @@
 
 {% block content %}
 
-    {% cache None flickr_full img.flickr_id %}
-        <h2>{{ flickr.title }}</h2>
-        <a
-            data-flickr-embed="true"
-            href="{{ flickr.page_url }}"
-            title="{{ flickr.title }}">
-                <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
-        </a>
-        <p>{{ flickr.description }}</p>
-    {% endcache %}
+  {% cache None flickr_full img.flickr_id %}
+    <h2>{{ flickr.title }}</h2>
+    <a
+      data-flickr-embed="true"
+      href="{{ flickr.page_url }}"
+      title="{{ flickr.title }}">
+      <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
+    </a>
+    <p>{{ flickr.description }}</p>
+  {% endcache %}
 
+
+  <div class="btn-group">
     {% if previous_id %}
-        <a href="{% url "image" previous_id %}">Previous</a>
-        {% if next_id %}|{% endif %}
+      <a href="{% url 'image' previous_id %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
     {% endif %}
 
     {% if next_id %}
-        <a href="{% url "image" next_id %}">Next</a>
+      <a href="{% url 'image' next_id %}" class="btn btn-sm btn-primary">Next &raquo;</a>
     {% endif %}
+  </div>
 
    <p>
-       <a href="{{ flickr.page_url }}" target="_blank">
-           <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
-        </a>
-    </p>
+   <a href="{{ flickr.page_url }}" target="_blank">
+     <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
+  </a>
+  </p>
 
 {% endblock content %}

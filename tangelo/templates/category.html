@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load cache markdownify %}
+{% load cache markdownify static %}
 
 {% block title %}images by shacker{% endblock title %}
 
@@ -21,7 +21,7 @@
                 {% if thumbnail %}
                   <img src="{{ thumbnail.embed_url }}" alt="Thumbnail image for category ({{ thumbnail.title }})">
                   {% else %}
-                  <img src="/static/img/default_thumb.jpg" alt="Missing placeholder">
+                  <img src="{% static "img/default_thumb.jpg" %}" alt="Missing placeholder">
                 {% endif %}
               {% endwith %}
 
