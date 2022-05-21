@@ -1,8 +1,7 @@
 from dataclasses import asdict
 from itertools import cycle
 
-from django.core.management import call_command
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
 from gallery.models import Album, Image
 from gallery.utils import get_api_image_data, get_prev_next_ids
@@ -48,12 +47,6 @@ def image(request, album_slug: str, flickr_id: int):
     }
 
     return render(request, "image.html", context=ctx)
-
-
-def clear_cache(request):
-    """Clear all caches. Superuser-only (but harmless)"""
-    call_command("clear_cache")
-    return redirect("home")
 
 
 def about(request):

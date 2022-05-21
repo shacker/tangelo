@@ -17,9 +17,7 @@
   {% endcache %}
 
 
-  <div class="">
-
-
+  <div class="navigation">
     {% if prev_next_ids.prev %}
       <a href="{% url 'image' img.album.slug prev_next_ids.prev %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
     {% endif %}
@@ -29,7 +27,6 @@
     {% if prev_next_ids.next %}
       <a href="{% url 'image' img.album.slug prev_next_ids.next %}" class="btn btn-sm btn-primary">Next &raquo;</a>
     {% endif %}
-
   </div>
 
    <p>
@@ -37,7 +34,5 @@
       <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
     </a>
   </p>
-
-
 
 {% endblock content %}
