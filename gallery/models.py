@@ -104,3 +104,21 @@ class Image(TimeStampedModel):
 
     class Meta:
         ordering = ["album_order"]
+
+
+class SimplePage(TimeStampedModel):
+    """
+    Basic content page with a Markdown text field (mostly for "About").
+    """
+
+    title = models.CharField(
+        max_length=120,
+        help_text="Title for this page",
+    )
+
+    body = models.TextField(
+        help_text="General purpose text area"
+    )
+
+    def __str__(self) -> str:
+        return self.title

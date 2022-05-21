@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from gallery.models import Album, Image
+from gallery.models import Album, Image, SimplePage
 
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
@@ -43,3 +43,4 @@ class AlbumAdmin(admin.ModelAdmin):
 
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Album, AlbumAdmin)
+admin.site.register(SimplePage)

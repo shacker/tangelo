@@ -1,57 +1,10 @@
 {% extends 'base.html' %}
+{% load markdownify %}
 
 {% block title %}About shacker.net{% endblock title %}
 
 {% block content %}
-
-    <h2>About my photography</h2>
-
-    <p><b>LINK TO REPO</b></p>
-
-    <p>
-        I've been a casual photographer most of my life, but started to get more interested while
-        working as a developer at UC Berkeley's Graduate School of Journalism in the 2000s, sharing an
-        office with photojournalist <a href="https://www.kenlight.com">Ken Light</a> and sitting in on sessions with photojournalism professor
-        <a href="https://journalism.berkeley.edu/person/richard_koci_hernandez/">Richard Koci-Hernandez</a>,
-        who suggested shooting an image every day. I got hooked, and did Photo-a-Day in 2011, 2014, and 2017. But it wasn't until
-        Steven Bollman suggested I dive into the Fuji system, and I started hiking with (and enjoying the photography of)
-        naturalist <a href="https://www.instagram.com/wardmruth/">Ward Ruth</a> that I started digging deeper. When the pandemic hit,
-        I finally(!) learned manual exposure and started carrying the X-T cameras everywhere.
-    </p>
-
-    <p>
-        I love to hike, love to travel, and I love cycling. And I'm fortunate to live in the SF Bay Area, which
-        is so rich with both natural beauty and the leftovers of the Built World -- shipyards, old buildings,
-        fascinating people. The cameras became an essential ingredient, and I mostly stopped shooting iPhone.
-        I get out lots, and document my experiences, that's all.
-    </p>
-
-
-    <h2>About this site</h2>
-
-    <p>
-        As a photography portfolio site, this one is a bit unique. Yes, I wanted a place
-        apart from social media to display my favorite work. But I already put a lot of time
-        into uploading, titling, describing and tagging my images on Flickr. I wanted a way to
-        leverage that work (and the image hosting I already pay for) into a customized
-        portfolio site.
-    </p>
-
-    <p>
-        Since Flickr provides a <a href="https://www.flickr.com/services/api/">full-featured API</a>,
-        and I am a web developer, I thought it would be cool to pull select images directly
-        from Flickr into my portfolio. Since I specialize in the
-        <a href="https://www.djangoproject.com">Django</a> web framework, I decided to see if I could
-        build a Django site that pulls everything it can from Flickr, rather than requiring me to
-        upload images to yet another site. The result was the <a href="https://github.com/shacker/tangelo">Tangelo</a>
-        project, which does exactly that. If you speak Python/Django and use Flickr, you're free to use Tangelo and
-        customize for your needs (or contribute code!). Otherwise, it's probably not for you (coding required).
-    </p>
-
-    <p>
-        I'm <a href="https://flickr.com/photos/shacker/">shacker on Flickr</a>
-        (on <a href="https://www.instagram.com/shacker/">Instagram</a> too).
-    </p>
+    {{ page.body|markdownify }}
 
     <h2>Contact</h2>
     <p>Drop me a line via the contact form on Birdhouse:</p>

@@ -121,3 +121,29 @@ FLICKR_USERNAME = config.FLICKR_USERNAME
 FLICKR_USER_ID = config.FLICKR_USER_ID
 FLICKR_THUMBNAIL_SIZE = config.FLICKR_THUMBNAIL_SIZE
 FLICKR_IMAGE_SIZE = config.FLICKR_IMAGE_SIZE
+
+# The following HTML tags can be rendered via Markdown in the ProjectDocs
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": [
+            "a",
+            "b",
+            "blockquote",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "i",
+            "img",
+            "li",
+            "ol",
+            "p",
+            "table",
+            "td",
+            "th",
+            "tr",
+            "ul",
+        ]
+    },
+}

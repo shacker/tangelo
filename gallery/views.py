@@ -1,9 +1,9 @@
 from dataclasses import asdict
 from itertools import cycle
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
-from gallery.models import Album, Image
+from gallery.models import Album, Image, SimplePage
 from gallery.utils import get_api_image_data, get_prev_next_ids
 
 
@@ -51,4 +51,5 @@ def image(request, album_slug: str, flickr_id: int):
 
 def about(request):
     """Just render about template"""
-    return render(request, "about.html")
+    page = get_object_or_404(SimplePage, title="About")
+    return render(request, "about.html", {"page": page})
