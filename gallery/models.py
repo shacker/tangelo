@@ -3,7 +3,6 @@ from dataclasses import asdict
 from django.conf import settings
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
-
 from gallery.utils import get_api_image_data
 
 
@@ -72,8 +71,9 @@ class Image(TimeStampedModel):
     # image is in multiple categories, but letting that slide for now...
     album_order = models.IntegerField(
         help_text="Controls ordering of image within albums, and next/prev links.",
-        unique=True,
         blank=True,  # but not null=True!
+        default=0,
+        db_index=True,  # required by django-sortable
     )
 
     def get_thumbnail(self):
@@ -101,3 +101,6 @@ class Image(TimeStampedModel):
 
     def __str__(self) -> str:
         return f"{self.title} ({str(self.flickr_id)})"
+
+    class Meta:
+        ordering = ["album_order"]

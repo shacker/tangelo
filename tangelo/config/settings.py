@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "gallery",
     "markdownify.apps.MarkdownifyConfig",
+    "adminsortable2",
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,6 @@
 black
 django
+django-admin-sortable2
 django-extensions
 django-markdownify
 dj-database-url

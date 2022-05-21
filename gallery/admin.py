@@ -4,6 +4,7 @@ from gallery.models import Album, Image
 
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
+from adminsortable2.admin import SortableAdminMixin
 
 
 @admin.action(description="Flush cache for selected images")
@@ -15,6 +16,7 @@ def flush_image_cache(modeladmin, request, queryset):
         key = make_template_fragment_key("flickr_thumb", [obj.flickr_id])
         cache.delete(key)
 
+
 @admin.action(description="Flush cache for selected album thumbnails")
 def flush_album_thumb_cache(modeladmin, request, queryset):
     for obj in queryset:
@@ -23,10 +25,11 @@ def flush_album_thumb_cache(modeladmin, request, queryset):
         cache.delete(key)
 
 
-class ImageAdmin(admin.ModelAdmin):
+class ImageAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ("title", "flickr_id", "album", "album_order")
     list_filter = ("album",)
     actions = [flush_image_cache]
+    ordering = ["album_order"]
 
 
 class AlbumAdmin(admin.ModelAdmin):
@@ -36,6 +39,7 @@ class AlbumAdmin(admin.ModelAdmin):
         "order",
     )
     actions = [flush_album_thumb_cache]
+
 
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Album, AlbumAdmin)
