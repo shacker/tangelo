@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static cache %}
 
-{% block title %}{{ flickr.title }}{% endblock title %}
+{% block title %}{{ block.super }} - {{ flickr.title }}{% endblock title %}
 
 {% block content %}
 
@@ -22,7 +22,7 @@
       <a href="{% url 'image' img.album.slug prev_next_ids.prev %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
     {% endif %}
 
-    <a href="{% url 'album' img.album.slug %}" class="btn btn-secondary btn-sm">Back to {{ img.album.title }}</a>
+    <a href="{% url 'album' img.album.slug %}" class="btn btn-secondary btn-sm">{{ img.album.title }}</a>
 
     {% if prev_next_ids.next %}
       <a href="{% url 'image' img.album.slug prev_next_ids.next %}" class="btn btn-sm btn-primary">Next &raquo;</a>

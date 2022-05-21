@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load cache markdownify static %}
 
-{% block title %}images by shacker{% endblock title %}
+{% block title %}{{ block.super }} - {{ album.title }}{% endblock title %}
 
 {% block content %}
 
