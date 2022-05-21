@@ -5,8 +5,8 @@
 
 {% block content %}
 
+  <h2 class="full_img_title">{{ flickr.title }}</h2>
   {% cache None flickr_full img.flickr_id %}
-    <h2>{{ flickr.title }}</h2>
     <a
       data-flickr-embed="true"
       href="{{ flickr.page_url }}"

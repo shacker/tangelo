@@ -136,3 +136,7 @@ a.article-title:hover {
 }
 
 /* End imagegrid layout */
+
+h2.full_img_title {
+  font-family: 'Nunito', sans-serif;
+}

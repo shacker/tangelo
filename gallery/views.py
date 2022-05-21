@@ -20,7 +20,8 @@ def album(request, slug: str):
 
     # For Responsive Image Grid, we will always have four columns, but need to arrange the image set
     # in rows, respecting album image order left to right. So we set up four lists - one for each column.
-    # Then iterate through images and drop them in columns, in order.
+    # Then iterate through images and drop them in columns, in order. On the resulting page, we render
+    # thumbnails in columns, not rows.
     columns = [[], [], [], []]
     cycled_columns = cycle(columns)
     for image in images:
@@ -36,7 +37,7 @@ def image(request, album_slug: str, flickr_id: int):
 
     # No crash protection on .get() but this image should never be called
     # without a valid flickr_id passed in.
-    img = Image.objects.get(flickr_id=flickr_id)
+    img = get_object_or_404(Image, flickr_id=flickr_id)
     flickr = asdict(get_api_image_data(flickr_id))
     prev_next_ids = get_prev_next_ids(img)
 
@@ -50,6 +51,6 @@ def image(request, album_slug: str, flickr_id: int):
 
 
 def about(request):
-    """Just render about template"""
+    """Just render About template"""
     page = get_object_or_404(SimplePage, title="About")
     return render(request, "about.html", {"page": page})
