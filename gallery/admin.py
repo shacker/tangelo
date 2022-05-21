@@ -1,19 +1,20 @@
 from django.contrib import admin
 
-from gallery.models import Category, Image
-
+from gallery.models import Album, Image
 
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("title", "flickr_id", "albums", "album_order")
-    list_filter = ("categories",)
-    filter_horizontal = ("categories",)
+    list_display = ("title", "flickr_id", "album", "album_order")
+    list_filter = ("album",)
 
-    def albums(self, obj):
-        return list(obj.categories.values_list("title", flat=True))
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("title", "order",)
+class AlbumAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "slug",
+        "order",
+    )
+
 
 admin.site.register(Image, ImageAdmin)
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(Album, AlbumAdmin)

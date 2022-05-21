@@ -1,12 +1,13 @@
-from django.conf import settings
-import flickrapi
 from dataclasses import dataclass
+
+import flickrapi
+from django.conf import settings
 
 
 @dataclass
 class ImageData:
     """Class for storing usable datapoints needed for displaying a Flickr image.
-    Cast back to a dict before sending to template. """
+    Cast back to a dict before sending to template."""
 
     title: str
     description: str
@@ -49,3 +50,31 @@ def get_api_image_data(flickr_id: int, size: str = settings.FLICKR_IMAGE_SIZE):
     )
 
     return image_data
+
+
+def get_prev_next_ids(img):
+    """Given an Image instance, finds the previous and next
+        Image IDs in an album, based on `album_order`.
+
+    Returns:
+        {"prev": prev_id, "next": next_id}
+        Either of these can be None if there is no previous or next.
+    """
+
+    from gallery.models import Image
+
+    next_id = None
+    prev_id = None
+
+    # Start with a queryset of all images in this image's album, except self
+    qs = Image.objects.filter(album=img.album).exclude(flickr_id=img.flickr_id)
+
+    next_id_qs = qs.filter(album_order__gt=img.album_order).order_by("album_order")
+    if next_id_qs.exists():
+        next_id = next_id_qs.first().flickr_id
+
+    prev_id_qs = qs.filter(album_order__lt=img.album_order).order_by("-album_order")
+    if prev_id_qs.exists():
+        prev_id = prev_id_qs.first().flickr_id
+
+    return {"prev": prev_id, "next": next_id}

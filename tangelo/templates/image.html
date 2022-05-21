@@ -17,20 +17,27 @@
   {% endcache %}
 
 
-  <div class="btn-group">
-    {% if previous_id %}
-      <a href="{% url 'image' previous_id %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
+  <div class="">
+
+
+    {% if prev_next_ids.prev %}
+      <a href="{% url 'image' img.album.slug prev_next_ids.prev %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
     {% endif %}
 
-    {% if next_id %}
-      <a href="{% url 'image' next_id %}" class="btn btn-sm btn-primary">Next &raquo;</a>
+    <a href="{% url 'album' img.album.slug %}" class="btn btn-secondary btn-sm">Back to {{ img.album.title }}</a>
+
+    {% if prev_next_ids.next %}
+      <a href="{% url 'image' img.album.slug prev_next_ids.next %}" class="btn btn-sm btn-primary">Next &raquo;</a>
     {% endif %}
+
   </div>
 
    <p>
-   <a href="{{ flickr.page_url }}" target="_blank">
-     <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
-  </a>
+    <a href="{{ flickr.page_url }}" target="_blank">
+      <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
+    </a>
   </p>
+
+
 
 {% endblock content %}

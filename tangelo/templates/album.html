@@ -5,8 +5,8 @@
 
 {% block content %}
 
-  <h2>{{ category }}</h2>
-  {{ category.about|markdownify }}
+  <h2>{{ album }}</h2>
+  {{ album.about|markdownify }}
 
   <div class="imagegrid mt-2">
     <div class="row">
@@ -15,11 +15,10 @@
         {% for image in column %}
           {# Cache each image forever with its flickr ID (None = forever) #}
           {% cache None flickr_thumb image.flickr_id %}
-            <a href="{% url "image" image.flickr_id %}">
-
+            <a href="{% url "image" image.album.slug image.flickr_id %}">
               {% with image.get_thumbnail as thumbnail  %}
                 {% if thumbnail %}
-                  <img src="{{ thumbnail.embed_url }}" alt="Thumbnail image for category ({{ thumbnail.title }})">
+                  <img src="{{ thumbnail.embed_url }}" alt="Thumbnail image for album ({{ thumbnail.title }})">
                   {% else %}
                   <img src="{% static "img/default_thumb.jpg" %}" alt="Missing placeholder">
                 {% endif %}

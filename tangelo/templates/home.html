@@ -6,24 +6,22 @@
 {% block content %}
 
   <div class="row">
-      {% for category in categories %}
+      {% for album in albums %}
         <div class="row">
-          <a href="{% url 'category' category.slug %}">
+          <a href="{% url 'album' album.slug %}">
             {# None = No expiration to cache - expire manually #}
-            {% cache None category_thumb category.slug %}
+            {% cache None album_thumb album.slug %}
               <div class="col-12 mx-auto mb-4">
                 <img
                   class="screen mr-4 rounded"
-                  {% with category.cat_thumb.get_thumbnail as thumbnail %}
-                    {% if thumbnail %}
-                      src="{{ category.cat_thumb.get_thumbnail.embed_url }}"
-                    {% else %}
-                      src="/static/img/default_thumb.jpg"
-                    {% endif %}
-                  {% endwith %}
+                  {% if album.cat_thumb.get_thumbnail.embed_url %}
+                    src="{{ album.cat_thumb.get_thumbnail.embed_url }}"
+                  {% else %}
+                    src="/static/img/default_thumb.jpg"
+                  {% endif %}
                   alt="Thumbnail image"
                 >
-                <br /><a href="{% url 'category' category.slug %}">{{ category.title }}</a>
+                <br /><a href="{% url 'album' album.slug %}">{{ album.title }}</a>
               </div>
             {% endcache %}
         </a>
