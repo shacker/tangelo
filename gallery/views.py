@@ -50,7 +50,7 @@ def image(request, album_slug: str, flickr_id: int):
     return render(request, "image.html", context=ctx)
 
 
-def about(request):
+def simple_page(request, page_slug: str):
     """Just render About template"""
-    page = get_object_or_404(SimplePage, title="About")
+    page = get_object_or_404(SimplePage, slug=page_slug)
     return render(request, "about.html", {"page": page})

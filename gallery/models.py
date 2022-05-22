@@ -116,6 +116,11 @@ class SimplePage(TimeStampedModel):
         help_text="Title for this page",
     )
 
+    slug = models.CharField(
+        max_length=120,
+        help_text="Manually slugified version of the title",
+    )
+
     body = models.TextField(
         help_text="General purpose text area"
     )

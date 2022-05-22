@@ -31,8 +31,9 @@
          </button>
          <div class="collapse navbar-collapse" id="navbarToggle">
           <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{% url "about" %}">{{ project.name }} About</a>
-
+              {# TODO: Could automate these into self-building menu... #}
+              <a class="nav-item nav-link" href="{% url "page" "about" %}">About</a>
+              <a class="nav-item nav-link" href="{% url "page" "prints" %}">Prints</a>
           </div>
           <!-- Navbar Right Side -->
           <div class="navbar-nav">

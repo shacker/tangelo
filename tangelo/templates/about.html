@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
 {% load markdownify %}
 
-{% block title %}About shacker.net{% endblock title %}
+{% block title %}{{ block.super }}- {{ page_title }}{% endblock title %}
 
 {% block content %}
     <div class="bodycontent">
         {{ page.body|markdownify }}
-
-        <h2>Contact</h2>
-        <p>Drop me a line via the contact form on Birdhouse:</p>
-        <p><a href="http://blog.birdhouse.org/contact/" class="btn btn-primary btn-large">Contact me</a></p>
     </div>
 
 {% endblock content %}

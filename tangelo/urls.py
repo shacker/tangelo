@@ -7,7 +7,7 @@ from gallery import views
 
 urlpatterns = [
     path("tadmin/", admin.site.urls),
-    path("about", view=views.about, name="about"),
+    path("p/<str:page_slug>", view=views.simple_page, name="page"),
     path("<str:album_slug>/<int:flickr_id>", view=views.image, name="image"),
     path("<str:slug>", view=views.album, name="album"),
     path("", view=views.home, name="home"),

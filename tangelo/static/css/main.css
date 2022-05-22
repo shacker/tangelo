@@ -155,8 +155,12 @@ p.image_caption {
   font-family: 'Baloo Paaji 2', cursive;
 }
 
-.album_thumb a {
-  color:#305177;
+.album_thumb a, .bodycontent a {
+  color:#356282;
   font-weight: bold;
   font-family: 'Nunito', sans-serif;
+}
+
+a.btn {
+  color: #e1e8eb;
 }

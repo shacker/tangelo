@@ -14,9 +14,7 @@
         title="{{ flickr.title }}">
         <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
       </a>
-      {% if flickr.description %}
-        <p class="mt-2 image_caption">{{ flickr.description }}</p>
-      {% endif %}
+      <p class="mt-2 image_caption">{{ flickr.description }}</p>
   {% endcache %}
 
 
