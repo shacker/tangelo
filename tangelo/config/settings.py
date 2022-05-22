@@ -88,6 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MANAGERS = ["shacker@birdhouse.org", ]
 
 CACHES = {
     "default": {
@@ -115,6 +116,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "shacker@birdhouse.org"
+
+# Flickr stuff
 FLICKR_API_KEY = config.FLICKR_API_KEY
 FLICKR_API_SECRET = config.FLICKR_API_SECRET
 FLICKR_USERNAME = config.FLICKR_USERNAME
@@ -122,7 +127,8 @@ FLICKR_THUMBNAIL_SIZE = config.FLICKR_THUMBNAIL_SIZE
 FLICKR_IMAGE_SIZE = config.FLICKR_IMAGE_SIZE
 
 # Defines how Markdownify bleaches/sanitizes, or allows HTML tags and attributes
-# Allow myself to post any content type - other sites may want to lock this down.
+# Allow myself (the onlyh administrator) to post any content type -
+# other sites may want to lock this down.
 MARKDOWNIFY = {
     "default": {
         "BLEACH": False

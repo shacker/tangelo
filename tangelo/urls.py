@@ -8,8 +8,8 @@ from gallery import views
 urlpatterns = [
     path("tadmin/", admin.site.urls),
     path("p/<str:page_slug>", view=views.simple_page, name="page"),
-    path("<str:album_slug>/<int:flickr_id>", view=views.image, name="image"),
-    path("<str:slug>", view=views.album, name="album"),
+    path("i/<str:album_slug>/<int:flickr_id>", view=views.image, name="image"),
+    path("a/<str:slug>", view=views.album, name="album"),
     path("", view=views.home, name="home"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

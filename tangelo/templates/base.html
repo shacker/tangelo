@@ -31,9 +31,10 @@
          </button>
          <div class="collapse navbar-collapse" id="navbarToggle">
           <div class="navbar-nav mr-auto">
-              {# TODO: Could automate these into self-building menu... #}
-              <a class="nav-item nav-link" href="{% url "page" "about" %}">About</a>
-              <a class="nav-item nav-link" href="{% url "page" "prints" %}">Prints</a>
+            {# TODO: Could automate these into self-building menu... #}
+            <a class="nav-item nav-link" href="{% url "page" "about" %}">About</a>
+            <a class="nav-item nav-link" href="{% url "page" "prints" %}">Prints</a>
+            <a class="nav-item nav-link" href="{% url "contact_form" %}">Contact</a>
           </div>
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
@@ -69,6 +70,16 @@
     <!-- Required JavaScript -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GRJR9MS13X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-GRJR9MS13X');
+    </script>
 
    {# Inner pages may include additional javascript #}
    {% block extra_js %}{% endblock extra_js %}
