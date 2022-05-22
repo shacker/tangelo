@@ -1,39 +1,44 @@
-# tangelo
-Django-based image gallery built on the Flickr API
+# Tangelo
+A Django-based image gallery built on the Flickr API. A working example can be viewed at [shacker.net](https://shacker.net)
 
-Keep your Flickr API credentials secret
+*This is a gallery system for Python coders who also happen to be Flickr*
+*users, not for the general public.*
 
-### Changing Python Dependencies
+If you want a gallery system that doesn’t require writing or maintaining code,
+or if you are not familiar with Django, this project is not for you (try WordPress, or SquareSpace, or Lightroom Portfolios instead).
 
-To add, remove, or change the project's Python dependencies, edit `base.in` (global) or `dev.in`
-(developer only). To "lock" your dependencies, run `make requirements.txt` or `make
-requirements/dev.txt` or both. Because make is smart about these things, it will only do something
-if the source files (base.in or dev.in) have changed. Note that this also means that updates to the
-unversioned packages referenced in dev.in won't be picked up automatically! You can force it to
-upgrade them with:
+Anyone is free to help themselves to this source code, or even to make pull requests, but I will not support users who are learning Django for the first time.
 
-```
-pip-compile --generate-hashes --output-file=requirements.txt base.in
+## Installation
+This repo represents a full Django project, not a reusable app. As a result, it is not pip installable. Clone this repo and deploy it from a git check out using your deployment system of choice.
 
-# or, to just force it to update one package, do one of:
-
-pip-compile --generate-hashes --output-file=requirements.txt -P package_name base.in
-```
-
-## Settings specific to this project
-
-You'll need to establish these project settings.
-Get a Flickr key and secret here:
-https://www.flickr.com/services/api/misc.api_keys.html
+## Settings
+Get a Flickr key and secret [here](https://www.flickr.com/services/api/misc.api_keys.html). Then, in your project settings:
 
 ```
 FLICKR_API_KEY: "123abc"
 FLICKR_API_SECRET: "abc123"
 FLICKR_USERNAME: "yourusername"
 
-# See table on this page for image size reference: https://www.flickr.com/services/api/misc.urls.html
+# See table on this page for image size reference:
+# https://www.flickr.com/services/api/misc.urls.html
 # b = 1024 on the long side
 # n = 320px on the long side
 FLICKR_IMAGE_SIZE: "b"
 FLICKR_THUMBNAIL_SIZE: "n"
 ```
+
+As always, keep secrets out of version control! Your key should be in an environment variable.
+
+### Changing Python Dependencies
+
+This project uses [pip-tools](https://pypi.org/project/pip-tools/) and its pip-compile to generate hashes for dependency installation. To add or update deps:
+
+```
+# Full:
+pip-compile --generate-hashes --output-file=requirements.txt base.in
+
+# Single package
+pip-compile --generate-hashes --output-file=requirements.txt -P package_name base.in
+```
+
