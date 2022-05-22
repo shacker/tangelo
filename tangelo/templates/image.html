@@ -6,14 +6,17 @@
 {% block content %}
 
   <h2 class="full_img_title">{{ flickr.title }}</h2>
+
   {% cache None flickr_full img.flickr_id %}
-    <a
-      data-flickr-embed="true"
-      href="{{ flickr.page_url }}"
-      title="{{ flickr.title }}">
-      <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
-    </a>
-    <p>{{ flickr.description }}</p>
+      <a
+        data-flickr-embed="true"
+        href="{{ flickr.page_url }}"
+        title="{{ flickr.title }}">
+        <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
+      </a>
+      {% if flickr.description %}
+        <p class="mt-2 image_caption">{{ flickr.description }}</p>
+      {% endif %}
   {% endcache %}
 
 

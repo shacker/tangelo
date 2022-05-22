@@ -137,6 +137,26 @@ a.article-title:hover {
 
 /* End imagegrid layout */
 
-h2.full_img_title {
+h2.full_img_title, p.image_caption {
+  color:#3c3c3c;
+}
+
+h2.full_img_title, div.bodycontent, .navbar-brand {
+  font-family: 'Nunito', sans-serif;
+}
+
+p.image_caption {
+  font-family: 'Nunito', sans-serif;
+  /* Equivalent to width of a full-size image, so caption isn't wider than image */
+  max-width: 1024px;
+}
+
+.btn {
+  font-family: 'Baloo Paaji 2', cursive;
+}
+
+.album_thumb a {
+  color:#305177;
+  font-weight: bold;
   font-family: 'Nunito', sans-serif;
 }

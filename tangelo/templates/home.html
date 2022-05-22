@@ -11,7 +11,7 @@
           <a href="{% url 'album' album.slug %}">
             {# None = No expiration to cache - expire manually #}
             {% cache None album_thumb album.slug %}
-              <div class="col-12 mx-auto mb-4">
+              <div class="col-12 mx-auto mb-4 album_thumb">
                 <img
                   class="screen mr-4 rounded"
                   {% if album.cat_thumb.get_thumbnail.embed_url %}

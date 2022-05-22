@@ -35,7 +35,6 @@ class AppConfig(GoodConf):
     FLICKR_API_KEY = Field(default="", help="API key issued by Flickr")
     FLICKR_API_SECRET = Field(default="", help="API secret issued by Flickr")
     FLICKR_USERNAME = Field(default="", help="Flickr username")
-    FLICKR_USER_ID = Field(default="", help="Flickr user ID")
 
     # See table on this page for thumbnail size reference: https://www.flickr.com/services/api/misc.urls.html
     FLICKR_IMAGE_SIZE = Field(default="b", help="Image size for image detail view")
