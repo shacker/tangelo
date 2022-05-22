@@ -5,6 +5,7 @@ django-crispy-forms
 django-extensions
 django-markdownify
 dj-database-url
+fabric
 flake8
 flickrapi
 goodconf
