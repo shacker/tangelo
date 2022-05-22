@@ -1,6 +1,7 @@
 black
 django
 django-admin-sortable2
+django-crispy-forms
 django-extensions
 django-markdownify
 dj-database-url

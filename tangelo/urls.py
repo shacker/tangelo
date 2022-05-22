@@ -10,6 +10,8 @@ urlpatterns = [
     path("p/<str:page_slug>", view=views.simple_page, name="page"),
     path("i/<str:album_slug>/<int:flickr_id>", view=views.image, name="image"),
     path("a/<str:slug>", view=views.album, name="album"),
+    path("contact/", view=views.contact, name="contact"),
+    path("contact/success/", view=views.contact_success, name="contact_success"),
     path("", view=views.home, name="home"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

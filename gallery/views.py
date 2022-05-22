@@ -1,8 +1,12 @@
 from dataclasses import asdict
 from itertools import cycle
 
-from django.shortcuts import get_object_or_404, render
+from django.conf import settings
+from django.core.mail import BadHeaderError, send_mail
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
+from gallery.forms import ContactForm
 from gallery.models import Album, Image, SimplePage
 from gallery.utils import get_api_image_data, get_prev_next_ids
 
@@ -54,3 +58,24 @@ def simple_page(request, page_slug: str):
     """Just render About template"""
     page = get_object_or_404(SimplePage, slug=page_slug)
     return render(request, "about.html", {"page": page})
+
+
+def contact(request):
+    if request.method == "GET":
+        form = ContactForm()
+    else:
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data["subject"]
+            your_email = form.cleaned_data["your_email"]
+            message = form.cleaned_data["message"]
+            try:
+                send_mail(subject, message, your_email, settings.MANAGERS)
+            except BadHeaderError:
+                return HttpResponse("Invalid header found.")
+            return redirect("contact_success")
+    return render(request, "contact.html", {"form": form})
+
+
+def contact_success(request):
+    return render(request, "contact_success.html")
