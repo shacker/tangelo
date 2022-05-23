@@ -24,7 +24,7 @@ class AppConfig(GoodConf):
         "https://docs.djangoproject.com/en/2.0/ref/settings/#secret-key",
     )
     MEDIA_ROOT = Field(default=str(PROJECT_ROOT / "media"))
-    STATIC_ROOT = Field(default=str(PROJECT_ROOT / "static"))
+    STATIC_ROOT = Field(default=str(PROJECT_ROOT / "staticfiles"))
 
     CACHE_BACKEND = Field(default="django.core.cache.backends.redis.RedisCache")
     CACHE_TTL = Field(default=(60 * 60 * 24 * 365))  # One year - cache "permanently" until cleared
