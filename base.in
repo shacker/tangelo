@@ -1,15 +1,16 @@
 black
+dj-database-url
 django
 django-admin-sortable2
 django-crispy-forms
 django-extensions
 django-markdownify
-dj-database-url
 fabric
 flake8
 flickrapi
 goodconf
+gunicorn
 icecream
-psycopg2
+psycopg2-binary
 redis
 ruamel.yaml  # Used by goodconf
