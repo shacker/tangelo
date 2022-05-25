@@ -39,6 +39,6 @@ This project uses [pip-tools](https://pypi.org/project/pip-tools/) and its pip-c
 pip-compile --generate-hashes --output-file=requirements.txt base.in
 
 # Single package
-pip-compile --generate-hashes --output-file=requirements.txt -P package_name base.in
+pip-compile --generate-hashes --output-file=requirements.txt -P dateutils base.in
 ```
 

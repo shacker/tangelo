@@ -1,4 +1,5 @@
 black
+dateutils
 dj-database-url
 django
 django-admin-sortable2

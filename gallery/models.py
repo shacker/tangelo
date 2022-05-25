@@ -65,6 +65,14 @@ class Image(TimeStampedModel):
         help_text="Description auto-copied from Flickr description, can be overridden", blank=True
     )
 
+    taken = models.DateTimeField(
+        auto_now=False,
+        auto_now_add=False,
+        blank=True,
+        null=True,
+        help_text="Datetime when image was captured, as reported by Flickr API.",
+    )
+
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
 
     # Since an image can belong to more than one category, album_order is ambiguous when
@@ -92,6 +100,7 @@ class Image(TimeStampedModel):
             flickr = get_api_image_data(flickr_id=self.flickr_id)
             self.title = flickr.title
             self.description = flickr.description
+            self.taken = flickr.taken
 
             # Also set the album_order to the next highest - can be adjusted later
             # Don't crash when saving the very first image.
@@ -125,9 +134,7 @@ class SimplePage(TimeStampedModel):
         help_text="Manually slugified version of the title",
     )
 
-    body = models.TextField(
-        help_text="General purpose text area"
-    )
+    body = models.TextField(help_text="General purpose text area")
 
     def __str__(self) -> str:
         return self.title

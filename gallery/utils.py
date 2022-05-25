@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 import flickrapi
+from dateutil import parser
 from django.conf import settings
 
 
@@ -13,6 +15,7 @@ class ImageData:
     description: str
     embed_url: str
     page_url: str
+    taken: datetime
 
 
 def get_api_image_data(flickr_id: int, size: str = settings.FLICKR_IMAGE_SIZE):
@@ -38,6 +41,11 @@ def get_api_image_data(flickr_id: int, size: str = settings.FLICKR_IMAGE_SIZE):
     )
     response = flickr.photos.getInfo(photo_id=flickr_id)
     photo = response["photo"]
+    try:
+        taken = parser.parse(response["photo"]["dates"]["taken"])
+    except:
+        taken = None
+
     server = photo["server"]
     secret = photo["secret"]
     embed_url = f"https://live.staticflickr.com/{server}/{flickr_id}_{secret}_{size}.jpg"
@@ -47,6 +55,7 @@ def get_api_image_data(flickr_id: int, size: str = settings.FLICKR_IMAGE_SIZE):
         description=photo["description"]["_content"],
         page_url=photo["urls"]["url"][0]["_content"],
         embed_url=embed_url,
+        taken=taken,
     )
 
     return image_data
