@@ -94,8 +94,12 @@ class Image(TimeStampedModel):
             self.description = flickr.description
 
             # Also set the album_order to the next highest - can be adjusted later
-            last_img_id = Image.objects.order_by("album_order").last().album_order
-            self.album_order = last_img_id + 1
+            # Don't crash when saving the very first image.
+            if Image.objects.exists():
+                last_img_id = Image.objects.order_by("album_order").last().album_order
+                self.album_order = last_img_id + 1
+            else:
+                self.album_order = 1
 
         super().save(*args, **kwargs)
 
