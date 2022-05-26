@@ -138,7 +138,8 @@ a.article-title:hover {
 /* End imagegrid layout */
 
 h2.full_img_title, p.image_caption {
-  color:#3c3c3c;
+  color:#4b4b4b;
+  font-size: 1.4rem;
 }
 
 h2.full_img_title, div.bodycontent, .navbar-brand {
@@ -149,6 +150,7 @@ p.image_caption {
   font-family: 'Nunito', sans-serif;
   /* Equivalent to width of a full-size image, so caption isn't wider than image */
   max-width: 1024px;
+  font-size: .9rem;
 }
 
 .btn {
