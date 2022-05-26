@@ -37,4 +37,8 @@
     </a>
   </p>
 
+  {% if user.is_superuser %}
+    <p><a href="{% url 'admin:gallery_image_change' img.id %}">Edit in Admin</a></p>
+  {% endif %}
+
 {% endblock content %}

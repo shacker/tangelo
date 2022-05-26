@@ -29,7 +29,8 @@ class ImageAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ("title", "flickr_id", "album", "album_order")
     list_filter = ("album",)
     actions = [flush_image_cache]
-    ordering = ["album_order"]
+    ordering = ["album_order",]
+    search_fields = ("title",)
 
 
 class AlbumAdmin(admin.ModelAdmin):
