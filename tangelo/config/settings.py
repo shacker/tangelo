@@ -111,11 +111,10 @@ CACHE_TTL = config.CACHE_TTL
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Los_Angeles"
+USE_TZ = True
 
 USE_I18N = True
-
-USE_TZ = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -164,3 +163,4 @@ EMAIL_PORT = 587
 EMAIL_HOST = 'sub4.mail.dreamhost.com'
 EMAIL_HOST_USER = 'gmailsender@birdhouse.org'
 EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
+
