@@ -70,7 +70,7 @@ def contact(request):
             your_email = form.cleaned_data["your_email"]
             message = form.cleaned_data["message"]
             try:
-                send_mail(subject, message, your_email, settings.MANAGERS)
+                send_mail(subject, message, your_email, settings.MANAGERS, fail_silently=False)
             except BadHeaderError:
                 return HttpResponse("Invalid header found.")
             return redirect("contact_success")
