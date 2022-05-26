@@ -32,6 +32,7 @@ class AppConfig(GoodConf):
     # ES_IRIS_TOKEN = Field(default="", help="Access token issued by Greenhouse to Iris")
     # ES_GH_TOKEN = Field(default="", help="Access token issued by Iris to Greenhouse")
 
+    EMAIL_BACKEND = Field(default="django.core.mail.backends.console.EmailBackend")
     FLICKR_API_KEY = Field(default="", help="API key issued by Flickr")
     FLICKR_API_SECRET = Field(default="", help="API secret issued by Flickr")
     FLICKR_USERNAME = Field(default="", help="Flickr username")
