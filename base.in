@@ -5,6 +5,7 @@ django
 django-admin-sortable2
 django-crispy-forms
 django-extensions
+django-jsoneditor
 django-markdownify
 fabric
 flake8

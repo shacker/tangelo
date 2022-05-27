@@ -19,7 +19,7 @@ def home(request):
 
 def album(request, slug: str):
     """Show about text and array of image thumbnails in this album"""
-    album = Album.objects.get(slug=slug)
+    album = get_object_or_404(Album, slug=slug)
     images = Image.objects.filter(album=album).order_by("taken")
 
     # For Responsive Image Grid, we will always have four columns, but need to arrange the image set

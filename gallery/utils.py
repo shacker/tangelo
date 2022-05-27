@@ -16,6 +16,7 @@ class ImageData:
     embed_url: str
     page_url: str
     taken: datetime
+    raw_data: dict
 
 
 def get_api_image_data(flickr_id: int, size: str = settings.FLICKR_IMAGE_SIZE):
@@ -46,16 +47,20 @@ def get_api_image_data(flickr_id: int, size: str = settings.FLICKR_IMAGE_SIZE):
     except:
         taken = None
 
+    # Here store full response, parse out date
+
     server = photo["server"]
     secret = photo["secret"]
     embed_url = f"https://live.staticflickr.com/{server}/{flickr_id}_{secret}_{size}.jpg"
 
+    # TODO Ditch the dataclass, just return the raw response for storage, get the rest of fields from our own db
     image_data = ImageData(
         title=photo["title"]["_content"],
         description=photo["description"]["_content"],
         page_url=photo["urls"]["url"][0]["_content"],
         embed_url=embed_url,
         taken=taken,
+        raw_data=response
     )
 
     return image_data

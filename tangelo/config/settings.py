@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "markdownify.apps.MarkdownifyConfig",
     "adminsortable2",
     "crispy_forms",
+    "jsoneditor",
 ]
 
 MIDDLEWARE = [
@@ -166,3 +167,7 @@ EMAIL_HOST = 'sub4.mail.dreamhost.com'
 EMAIL_HOST_USER = 'gmailsender@birdhouse.org'
 EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
 
+# JS and CSS for Admin JSON editor
+# Check for upgrades at https://cdnjs.com/libraries/jsoneditor
+JSON_EDITOR_JS = "https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.7.4/jsoneditor.min.js"
+JSON_EDITOR_CSS = "https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.7.4/jsoneditor.min.css"

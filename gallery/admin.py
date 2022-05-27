@@ -1,10 +1,11 @@
+from adminsortable2.admin import SortableAdminMixin
 from django.contrib import admin
-
-from gallery.models import Album, Image, SimplePage
-
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
-from adminsortable2.admin import SortableAdminMixin
+from django.db import models
+from jsoneditor.forms import JSONEditor
+
+from gallery.models import Album, Image, SimplePage
 
 
 @admin.action(description="Flush cache for selected images")
@@ -28,6 +29,7 @@ class ImageAdmin(SortableAdminMixin, admin.ModelAdmin):
     actions = [flush_image_cache]
     ordering = ["album_order",]
     search_fields = ("title",)
+    formfield_overrides = {models.JSONField: {"widget": JSONEditor()}}
 
 
 class AlbumAdmin(admin.ModelAdmin):
@@ -37,6 +39,7 @@ class AlbumAdmin(admin.ModelAdmin):
         "order",
     )
     actions = [flush_album_thumb_cache]
+    autocomplete_fields = ('cat_thumb',)
 
 
 admin.site.register(Image, ImageAdmin)

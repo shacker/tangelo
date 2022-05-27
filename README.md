@@ -9,6 +9,8 @@ or if you are not familiar with Django, this project is not for you (try WordPre
 
 Anyone is free to help themselves to this source code, or even to make pull requests, but I will not support users who are learning Django for the first time.
 
+We store the full response and parse it in real time. We cache the image itself for performance.
+
 ## Installation
 This repo represents a full Django project, not a reusable app. As a result, it is not pip installable. Clone this repo and deploy it from a git check out using your deployment system of choice.
 
@@ -39,7 +41,7 @@ This project uses [pip-tools](https://pypi.org/project/pip-tools/) and its pip-c
 pip-compile --generate-hashes --output-file=requirements.txt base.in
 
 # Single package
-pip-compile --generate-hashes --output-file=requirements.txt -P dateutils base.in
+pip-compile --generate-hashes --output-file=requirements.txt -P django-jsoneditor base.in
 ```
 
 ### Difference between flush_cache and refetch
@@ -50,6 +52,4 @@ Superuser will have a few links at the bottom of each image:
 - Refetch: Reaches out to Flickr and overwrites our locally stored db data for this image
 - Flush cache: Leave our db alone, but erase the redis cached data for this image so it's regenerated on next load
 
-### Known Issues
 
-Realized late in the process that we prob don't need individual fields for title, description, date, etc. - we should store the whole JSON response in a JSONField and process it directly.

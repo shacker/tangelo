@@ -3,6 +3,7 @@ from dataclasses import asdict
 from django.conf import settings
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
@@ -48,6 +49,9 @@ class Album(TimeStampedModel):
 
         return flickr_data
 
+    class Meta:
+        ordering = ["title"]
+
     def __str__(self) -> str:
         return self.title
 
@@ -59,13 +63,18 @@ class Image(TimeStampedModel):
     """
 
     flickr_id = models.BigIntegerField(help_text="Unique Flickr ID for each image", unique=True)
+
+    image_api_data = models.JSONField(
+        encoder=DjangoJSONEncoder,
+        default=dict,
+        help_text="Stores full image detail response from Flickr getInfo API.",
+        blank=True,
+    )
+
     title = models.CharField(
         max_length=120,
         help_text="Title auto-copied from Flickr title, can be overridden",
         blank=True,
-    )
-    description = models.TextField(
-        help_text="Description auto-copied from Flickr description, can be overridden", blank=True
     )
 
     taken = models.DateTimeField(
@@ -96,8 +105,8 @@ class Image(TimeStampedModel):
         return flickr_data
 
     def flush_cache(self):
-        """ Empty image cache for this image only.
-        No return value. """
+        """Empty image cache for this image only.
+        No return value."""
 
         key = make_template_fragment_key("flickr_full", [self.flickr_id])
         cache.delete(key)
@@ -105,14 +114,12 @@ class Image(TimeStampedModel):
         cache.delete(key)
 
     def refetch(self):
-        """ We normally don't overwrite our own db entries after the first
+        """We normally don't overwrite our own db entries after the first
         save. But if this is called, we DO reach out to Flickr API again
         to grab all data and repopulate our own db.
         """
-        flickr = get_api_image_data(flickr_id=self.flickr_id)
-        self.title = flickr.title
-        self.description = flickr.description
-        self.taken = flickr.taken
+        response = get_api_image_data(flickr_id=self.flickr_id)
+        self.image_api_data = response.raw_data
 
         # Also set the album_order to the next highest - can be adjusted later
         # Don't crash when saving the very first image.
@@ -125,8 +132,8 @@ class Image(TimeStampedModel):
         self.save()
 
     def save(self, *args, **kwargs):
-        """On first save of an image, auto-populate title and description
-        via API, and compute next album_order ID."""
+        """On first save of an image, auto-populate title and date
+        from API, store the full response, and compute next album_order ID."""
 
         if not self.id:
             self.refetch()
