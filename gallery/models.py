@@ -1,8 +1,11 @@
 from dataclasses import asdict
 
 from django.conf import settings
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
+
 from gallery.utils import get_api_image_data
 
 
@@ -91,6 +94,15 @@ class Image(TimeStampedModel):
             get_api_image_data(self.flickr_id, size=settings.FLICKR_THUMBNAIL_SIZE)
         )
         return flickr_data
+
+    def flush_cache(self):
+        """ Empty image cache for this image only.
+        No return value. """
+
+        key = make_template_fragment_key("flickr_full", [self.flickr_id])
+        cache.delete(key)
+        key = make_template_fragment_key("flickr_thumb", [self.flickr_id])
+        cache.delete(key)
 
     def save(self, *args, **kwargs):
         """On first save of an image, auto-populate title and description

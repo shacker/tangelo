@@ -12,7 +12,7 @@
         data-flickr-embed="true"
         href="{{ flickr.page_url }}"
         title="{{ flickr.title }}">
-        <img src="{{ flickr.embed_url }}" alt="{{ flickr.title }}">
+        <img src="{{ flickr.embed_url }}" class="img-fluid" alt="{{ flickr.title }}">
       </a>
       <p class="mt-2 image_caption">{{ flickr.description }}</p>
       <p><small class="text-muted">Taken: {{ flickr.taken }}</small></p>
@@ -38,7 +38,12 @@
   </p>
 
   {% if user.is_superuser %}
-    <p class="small muted-text"><a href="{% url 'admin:gallery_image_change' img.id %}"><< Edit >></a></p>
+    <p class="small muted-text">
+      <<
+      <a href="{% url 'admin:gallery_image_change' img.id %}">Edit </a> |
+      <a href="{% url 'flush_cache' img.flickr_id %}">Flush Cache </a>
+      >>
+    </p>
   {% endif %}
 
 {% endblock content %}

@@ -4,7 +4,7 @@ from itertools import cycle
 from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from gallery.forms import ContactForm
 from gallery.models import Album, Image, SimplePage
@@ -79,3 +79,11 @@ def contact(request):
 
 def contact_success(request):
     return render(request, "contact_success.html")
+
+
+def flush_cache(request, flickr_id: int):
+    """Flush the cache for a single image, and redirect to detail view."""
+
+    img = Image.objects.get(flickr_id=flickr_id)
+    img.flush_cache()
+    return redirect(reverse("image", kwargs={"album_slug": img.album.slug, "flickr_id": flickr_id}))

@@ -11,10 +11,7 @@ from adminsortable2.admin import SortableAdminMixin
 def flush_image_cache(modeladmin, request, queryset):
     for obj in queryset:
         # Flush both the full image page cache and the album thumbnail
-        key = make_template_fragment_key("flickr_full", [obj.flickr_id])
-        cache.delete(key)
-        key = make_template_fragment_key("flickr_thumb", [obj.flickr_id])
-        cache.delete(key)
+        obj.flush_cache()
 
 
 @admin.action(description="Flush cache for selected album thumbnails")
