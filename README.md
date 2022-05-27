@@ -42,3 +42,14 @@ pip-compile --generate-hashes --output-file=requirements.txt base.in
 pip-compile --generate-hashes --output-file=requirements.txt -P dateutils base.in
 ```
 
+### Difference between flush_cache and refetch
+
+Superuser will have a few links at the bottom of each image:
+
+- Admin: Links to Admin edit view for this image
+- Refetch: Reaches out to Flickr and overwrites our locally stored db data for this image
+- Flush cache: Leave our db alone, but erase the redis cached data for this image so it's regenerated on next load
+
+### Known Issues
+
+Realized late in the process that we prob don't need individual fields for title, description, date, etc. - we should store the whole JSON response in a JSONField and process it directly.
