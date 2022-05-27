@@ -20,7 +20,7 @@ def home(request):
 def album(request, slug: str):
     """Show about text and array of image thumbnails in this album"""
     album = Album.objects.get(slug=slug)
-    images = Image.objects.filter(album=album).order_by("album_order")
+    images = Image.objects.filter(album=album).order_by("taken")
 
     # For Responsive Image Grid, we will always have four columns, but need to arrange the image set
     # in rows, respecting album image order left to right. So we set up four lists - one for each column.
@@ -86,4 +86,12 @@ def flush_cache(request, flickr_id: int):
 
     img = Image.objects.get(flickr_id=flickr_id)
     img.flush_cache()
+    return redirect(reverse("image", kwargs={"album_slug": img.album.slug, "flickr_id": flickr_id}))
+
+
+def refetch(request, flickr_id: int):
+    """Re-fetch our db entries for a single image, and redirect to detail view."""
+
+    img = Image.objects.get(flickr_id=flickr_id)
+    img.refetch()
     return redirect(reverse("image", kwargs={"album_slug": img.album.slug, "flickr_id": flickr_id}))

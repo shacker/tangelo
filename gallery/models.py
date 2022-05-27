@@ -104,23 +104,32 @@ class Image(TimeStampedModel):
         key = make_template_fragment_key("flickr_thumb", [self.flickr_id])
         cache.delete(key)
 
+    def refetch(self):
+        """ We normally don't overwrite our own db entries after the first
+        save. But if this is called, we DO reach out to Flickr API again
+        to grab all data and repopulate our own db.
+        """
+        flickr = get_api_image_data(flickr_id=self.flickr_id)
+        self.title = flickr.title
+        self.description = flickr.description
+        self.taken = flickr.taken
+
+        # Also set the album_order to the next highest - can be adjusted later
+        # Don't crash when saving the very first image.
+        if Image.objects.exists():
+            last_img_id = Image.objects.order_by("album_order").last().album_order
+            self.album_order = last_img_id + 1
+        else:
+            self.album_order = 1
+
+        self.save()
+
     def save(self, *args, **kwargs):
         """On first save of an image, auto-populate title and description
         via API, and compute next album_order ID."""
 
         if not self.id:
-            flickr = get_api_image_data(flickr_id=self.flickr_id)
-            self.title = flickr.title
-            self.description = flickr.description
-            self.taken = flickr.taken
-
-            # Also set the album_order to the next highest - can be adjusted later
-            # Don't crash when saving the very first image.
-            if Image.objects.exists():
-                last_img_id = Image.objects.order_by("album_order").last().album_order
-                self.album_order = last_img_id + 1
-            else:
-                self.album_order = 1
+            self.refetch()
 
         super().save(*args, **kwargs)
 

@@ -40,8 +40,9 @@
   {% if user.is_superuser %}
     <p class="small muted-text">
       <<
-      <a href="{% url 'admin:gallery_image_change' img.id %}">Edit </a> |
-      <a href="{% url 'flush_cache' img.flickr_id %}">Flush Cache </a>
+      <a href="{% url 'admin:gallery_image_change' img.id %}">Edit</a> |
+      <a href="{% url 'flush_cache' img.flickr_id %}">Flush Cache</a> |
+      <a href="{% url 'refetch' img.flickr_id %}">Refetch</a>
       >>
     </p>
   {% endif %}
