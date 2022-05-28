@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from gallery.forms import ContactForm
 from gallery.models import Album, Image, SimplePage
-from gallery.utils import get_api_image_data, get_prev_next_ids
+from gallery.utils import get_prev_next_ids
 
 
 def home(request):

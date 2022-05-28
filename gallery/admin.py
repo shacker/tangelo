@@ -1,4 +1,3 @@
-from adminsortable2.admin import SortableAdminMixin
 from django.contrib import admin
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
@@ -23,11 +22,11 @@ def flush_album_thumb_cache(modeladmin, request, queryset):
         cache.delete(key)
 
 
-class ImageAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ("title", "flickr_id", "album", "album_order")
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ("title", "flickr_id", "album", "taken")
     list_filter = ("album",)
     actions = [flush_image_cache]
-    ordering = ["album_order",]
+    ordering = ["-taken",]
     search_fields = ("title",)
     formfield_overrides = {models.JSONField: {"widget": JSONEditor()}}
 
