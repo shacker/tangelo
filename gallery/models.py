@@ -102,8 +102,6 @@ class Image(TimeStampedModel):
 
     # ### START METHODS ###
 
-
-
     def refetch(self):
         """We normally don't overwrite our own db entries after the first
         save. But if this is called, we DO reach out to Flickr API again

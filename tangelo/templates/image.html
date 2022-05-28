@@ -14,8 +14,12 @@
         title="{{ img_data.title }}">
         <img src="{{ img_data.flickr_embed_url }}" class="img-fluid" alt="{{ img_data.title }}">
       </a>
-      <p class="mt-2 image_caption">{{ img_data.description }}</p>
-      <p><small class="text-muted">Taken: {{ img.taken }}</small></p>
+      <p class="mt-2 image_caption">
+        {% if img_data.description %}
+          {{ img_data.description }}<br />
+        {% endif %}
+        <small>Taken: {{ img.taken }}</small>
+      </p>
   {% endcache %}
 
 

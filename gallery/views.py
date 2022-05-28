@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from itertools import cycle
 
 from django.conf import settings

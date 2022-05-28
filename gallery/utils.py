@@ -23,7 +23,9 @@ def get_api_image_data(flickr_id: int):
 
 def get_prev_next_ids(img):
     """Given an Image instance, finds the previous and next
-        Image IDs in an album, based on `album_order`.
+        Image IDs in an album, based on `taken` (date taken).
+        n.b. Originally written to order by manual `album_order`
+        but decided I preferred simple auto date ordering to keep things fresh.
 
     Returns:
         {"prev": prev_id, "next": next_id}
@@ -38,11 +40,11 @@ def get_prev_next_ids(img):
     # Start with a queryset of all images in this image's album, except self
     qs = Image.objects.filter(album=img.album).exclude(flickr_id=img.flickr_id)
 
-    next_id_qs = qs.filter(album_order__gt=img.album_order).order_by("album_order")
+    next_id_qs = qs.filter(taken__gt=img.taken).order_by("taken")
     if next_id_qs.exists():
         next_id = next_id_qs.first().flickr_id
 
-    prev_id_qs = qs.filter(album_order__lt=img.album_order).order_by("-album_order")
+    prev_id_qs = qs.filter(taken__lt=img.taken).order_by("-taken")
     if prev_id_qs.exists():
         prev_id = prev_id_qs.first().flickr_id
 
