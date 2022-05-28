@@ -1,0 +1,19 @@
+{% load static %}
+{# rendered repeatedly by album_thum in home.html #}
+
+<div class="row">
+  <a href="{{ local_url }}">
+    {# None = No expiration to cache - expire manually #}
+      <div class="col-12 mx-auto mb-4 album_thumb">
+        <img class="screen mr-4 rounded"
+          {% if embed_url %}
+            src="{{ embed_url }}"
+          {% else %}
+            src="/static/img/default_thumb.jpg"
+          {% endif %}
+          alt="Thumbnail image"
+        >
+        <br /><a href="{{ local_url }}">{{ title }}</a>
+      </div>
+    </a>
+  </div>
