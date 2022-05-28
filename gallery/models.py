@@ -1,5 +1,7 @@
+import logging
 from dataclasses import asdict
 
+from dateutil import parser
 from django.conf import settings
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
@@ -8,6 +10,8 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 from gallery.utils import get_api_image_data
+
+log = logging.getLogger(__name__)
 
 
 class Album(TimeStampedModel):
@@ -96,22 +100,9 @@ class Image(TimeStampedModel):
         db_index=True,  # required by django-sortable
     )
 
-    def get_thumbnail(self):
-        """Get a thumbnail version of this image via Flickr API."""
+    # ### START METHODS ###
 
-        flickr_data = asdict(
-            get_api_image_data(self.flickr_id, size=settings.FLICKR_THUMBNAIL_SIZE)
-        )
-        return flickr_data
 
-    def flush_cache(self):
-        """Empty image cache for this image only.
-        No return value."""
-
-        key = make_template_fragment_key("flickr_full", [self.flickr_id])
-        cache.delete(key)
-        key = make_template_fragment_key("flickr_thumb", [self.flickr_id])
-        cache.delete(key)
 
     def refetch(self):
         """We normally don't overwrite our own db entries after the first
@@ -119,7 +110,17 @@ class Image(TimeStampedModel):
         to grab all data and repopulate our own db.
         """
         response = get_api_image_data(flickr_id=self.flickr_id)
-        self.image_api_data = response.raw_data
+
+        # Store API result in our own db
+        self.image_api_data = response
+
+        # Store a copy of the date so it's a real date we can sort on
+        try:
+            self.taken = parser.parse(response["photo"]["dates"]["taken"])
+        except:
+            log.info(f"Could not store date taken for image {self.flickr_id}")
+
+        self.title = response["photo"]["title"]["_content"]
 
         # Also set the album_order to the next highest - can be adjusted later
         # Don't crash when saving the very first image.
@@ -130,6 +131,50 @@ class Image(TimeStampedModel):
             self.album_order = 1
 
         self.save()
+
+    def flush_cache(self):
+        """Empty image cache for this image only.
+        No return value."""
+
+        key = make_template_fragment_key("flickr_full", [self.flickr_id])
+        cache.delete(key)
+        key = make_template_fragment_key("flickr_thumb", [self.flickr_id])
+        cache.delete(key)
+
+    def get_page_data(self):
+        """Stored API data is a bit hairy. Extract just what we need to provide
+        a simplified dict for use in templates.
+        """
+        raw = self.image_api_data["photo"]
+        data = {
+            "title": raw["title"]["_content"],
+            "description": raw["description"]["_content"],
+            "flickr_page_url": raw["urls"]["url"][0]["_content"],
+            "flickr_embed_url": self.get_embed_url(),
+        }
+
+        return data
+
+    def get_embed_url(self, size: str = settings.FLICKR_IMAGE_SIZE):
+        """Compute the embed_url from stored API data combined with
+        a sizing argument. Works for both full-size and thumbnails
+        (any size, really).
+
+        Args:
+            size: Optional suffix mapping, per URL docs:
+            https://www.flickr.com/services/api/misc.urls.html
+            Defaults to "b" (1024 on the long side)
+
+        Returns:
+            A fully formed URL suitable for use in <img src="xxx">
+
+        """
+        photo = self.image_api_data["photo"]
+        server = photo["server"]
+        secret = photo["secret"]
+        embed_url = f"https://live.staticflickr.com/{server}/{self.flickr_id}_{secret}_{size}.jpg"
+
+        return embed_url
 
     def save(self, *args, **kwargs):
         """On first save of an image, auto-populate title and date

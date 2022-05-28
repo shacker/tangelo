@@ -42,12 +42,13 @@ def image(request, album_slug: str, flickr_id: int):
     # No crash protection on .get() but this image should never be called
     # without a valid flickr_id passed in.
     img = get_object_or_404(Image, flickr_id=flickr_id)
-    flickr = asdict(get_api_image_data(flickr_id))
+    # flickr = asdict(get_api_image_data(flickr_id))
+    img_data = img.get_page_data()
     prev_next_ids = get_prev_next_ids(img)
 
     ctx = {
         "img": img,
-        "flickr": flickr,
+        "img_data": img_data,
         "prev_next_ids": prev_next_ids,
     }
 

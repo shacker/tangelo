@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load cache markdownify static %}
+{% load render_thumbnail %}
 
 {% block title %}{{ block.super }} - {{ album.title }}{% endblock title %}
 
@@ -15,16 +16,7 @@
         {% for image in column %}
           {# Cache each image forever with its flickr ID (None = forever) #}
           {% cache None flickr_thumb image.flickr_id %}
-            <a href="{% url "image" image.album.slug image.flickr_id %}">
-              {% with image.get_thumbnail as thumbnail  %}
-                {% if thumbnail %}
-                  <img src="{{ thumbnail.embed_url }}" alt="Thumbnail image for album ({{ thumbnail.title }})">
-                  {% else %}
-                  <img src="{% static "img/default_thumb.jpg" %}" alt="Missing placeholder">
-                {% endif %}
-              {% endwith %}
-
-            </a>
+            {% render_thumbnail image %}
           {% endcache %}
         {% endfor %}
       </div>

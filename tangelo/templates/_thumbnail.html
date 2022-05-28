@@ -1,0 +1,11 @@
+{% load static %}
+{# rendered repeatedly by render_thumbnail in album.html #}
+
+<a href="{{ local_url}}">
+  {% if embed_url %}
+    <img src="{{ embed_url }}" alt="Thumbnail image for album ({{ title }})">
+  {% else %}
+    <img src="{% static "img/default_thumb.jpg" %}" alt="Missing placeholder">
+  {% endif %}
+</a>
+

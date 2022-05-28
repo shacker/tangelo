@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 {% load static cache %}
 
-{% block title %}{{ block.super }} - {{ flickr.title }}{% endblock title %}
+{% block title %}{{ block.super }} - {{ img_data.title }}{% endblock title %}
 
 {% block content %}
 
-  <h2 class="full_img_title">{{ flickr.title }}</h2>
+  <h2 class="full_img_title">{{ img_data.title }}</h2>
 
   {% cache None flickr_full img.flickr_id %}
       <a
         data-flickr-embed="true"
-        href="{{ flickr.page_url }}"
-        title="{{ flickr.title }}">
-        <img src="{{ flickr.embed_url }}" class="img-fluid" alt="{{ flickr.title }}">
+        href="{{ img_data.flickr_page_url }}"
+        title="{{ img_data.title }}">
+        <img src="{{ img_data.flickr_embed_url }}" class="img-fluid" alt="{{ img_data.title }}">
       </a>
-      <p class="mt-2 image_caption">{{ flickr.description }}</p>
-      <p><small class="text-muted">Taken: {{ flickr.taken }}</small></p>
+      <p class="mt-2 image_caption">{{ img_data.description }}</p>
+      <p><small class="text-muted">Taken: {{ img.taken }}</small></p>
   {% endcache %}
 
 
@@ -32,7 +32,7 @@
   </div>
 
    <p>
-    <a href="{{ flickr.page_url }}" target="_blank">
+    <a href="{{ img_data.flickr_page_url }}" target="_blank">
       <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
     </a>
   </p>
@@ -41,8 +41,8 @@
     <p class="small muted-text">
       <<
       <a href="{% url 'admin:gallery_image_change' img.id %}">Edit</a> |
-      <a href="{% url 'flush_cache' img.flickr_id %}">Flush Cache</a> |
-      <a href="{% url 'refetch' img.flickr_id %}">Refetch</a>
+      <a href="{% url 'refetch' img.flickr_id %}">Refetch</a> |
+      <a href="{% url 'flush_cache' img.flickr_id %}">Flush</a>
       >>
     </p>
   {% endif %}
