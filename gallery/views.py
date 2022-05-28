@@ -12,7 +12,14 @@ from gallery.utils import get_prev_next_ids
 
 def home(request):
     """Show about text and array of album thumbnails"""
-    ctx = {"albums": Album.objects.all().order_by("order")}
+
+    try:
+        intro = SimplePage.objects.get(slug="intro")
+    except SimplePage.DoesNotExist:
+        intro = None
+
+    ctx = {"albums": Album.objects.all().order_by("order"), "intro": intro}
+
     return render(request, "home.html", context=ctx)
 
 
