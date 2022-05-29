@@ -16,7 +16,7 @@
       </a>
       <p class="mt-2 image_caption">
         {% if img_data.description %}
-          {{ img_data.description }}<br />
+          {{ img_data.description|safe }}<br />
         {% endif %}
         <small>Taken: {{ img.taken }}</small>
       </p>
