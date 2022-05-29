@@ -1,6 +1,10 @@
+import logging
+
 import flickrapi
 from django.conf import settings
+from django.core.management import call_command
 
+log = logging.getLogger(__name__)
 
 def get_api_image_data(flickr_id: int):
     """
@@ -49,3 +53,25 @@ def get_prev_next_ids(img):
         prev_id = prev_id_qs.first().flickr_id
 
     return {"prev": prev_id, "next": next_id}
+
+
+def nuclear(clear: bool = True, refetch: bool = False):
+    """ Depending on args:
+        Clears all caches (default True)
+        Refetch all API data from Flickr (default False)
+
+        TODO: Let this work on a single image?
+    """
+    log.info("Flusing all caches")
+    call_command("clear_cache")
+    log.info("Done clearing cache.")
+
+    if refetch:
+        """ Rarely needed -"""
+        from gallery.models import Image
+        for image in Image.objects.all():
+            log.info(f"Re-fetching API data for image {image.flickr_id}")
+            image.refetch()
+            image.save()
+
+        log.info("Done re-fetching")
