@@ -19,9 +19,8 @@ class Command(BaseCommand):
             help="If True, refetches image data",
         )
 
-
     def handle(self, *args, **options) -> None:
-        """ Do it! """
+        """Do it!"""
         if options.get("refetch_images"):
             nuclear(refetch=True)
         else:

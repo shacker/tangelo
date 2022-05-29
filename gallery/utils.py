@@ -6,6 +6,7 @@ from django.core.management import call_command
 
 log = logging.getLogger(__name__)
 
+
 def get_api_image_data(flickr_id: int):
     """
     Use Flickr's getInfo() API to get metadata about an image by ID.
@@ -56,19 +57,20 @@ def get_prev_next_ids(img):
 
 
 def nuclear(clear: bool = True, refetch: bool = False):
-    """ Depending on args:
-        Clears all caches (default True)
-        Refetch all API data from Flickr (default False)
+    """Depending on args:
+    Clears all caches (default True)
+    Refetch all API data from Flickr (default False)
 
-        TODO: Let this work on a single image?
+    TODO: Let this work on a single image?
     """
     log.info("Flusing all caches")
     call_command("clear_cache")
     log.info("Done clearing cache.")
 
     if refetch:
-        """ Rarely needed -"""
-        from gallery.models import Image
+        """Rarely needed -"""
+        from gallery.models import Imagemo
+
         for image in Image.objects.all():
             log.info(f"Re-fetching API data for image {image.flickr_id}")
             image.refetch()
