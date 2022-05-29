@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
-{% load cache %}
 {% load markdownify %}
 {% load album_thumb %}
 {% block title %}{{ block.super }}{% endblock title %}
 
 {% block content %}
-
 
   <div class="card mb-4">
     <div class="card-body">
@@ -15,9 +13,7 @@
 
   <div class="row">
       {% for album in albums %}
-        {% cache None album_thumb album.slug %}
-          {% album_thumb album %}
-        {% endcache %}
+        {% album_thumb album %}
       {% endfor %}
   </div>
 

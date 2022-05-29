@@ -41,7 +41,7 @@ def album(request, slug: str):
     return render(request, "album.html", context=ctx)
 
 
-def image(request, album_slug: str, flickr_id: int):
+def image(request, flickr_id: int):
     """Show image detail, with a combination of locally stored image data
     and data retrieved from Flickr API."""
 
@@ -93,7 +93,7 @@ def flush_cache(request, flickr_id: int):
 
     img = Image.objects.get(flickr_id=flickr_id)
     img.flush_cache()
-    return redirect(reverse("image", kwargs={"album_slug": img.album.slug, "flickr_id": flickr_id}))
+    return redirect(reverse("image", kwargs={"flickr_id": flickr_id}))
 
 
 def refetch(request, flickr_id: int):
@@ -101,4 +101,4 @@ def refetch(request, flickr_id: int):
 
     img = Image.objects.get(flickr_id=flickr_id)
     img.refetch()
-    return redirect(reverse("image", kwargs={"album_slug": img.album.slug, "flickr_id": flickr_id}))
+    return redirect(reverse("image", kwargs={"flickr_id": flickr_id}))

@@ -18,4 +18,4 @@ def album_thumb(album, *args, **kwargs):
         else None
     )
 
-    return {"local_url": album_url, "embed_url": embed_url, "title": album.title}
+    return {"local_url": album_url, "embed_url": embed_url, "title": album.title, "slug": album.slug}

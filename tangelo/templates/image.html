@@ -25,13 +25,13 @@
 
   <div class="navigation">
     {% if prev_next_ids.prev %}
-      <a href="{% url 'image' img.album.slug prev_next_ids.prev %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
+      <a href="{% url 'image' prev_next_ids.prev %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
     {% endif %}
 
     <a href="{% url 'album' img.album.slug %}" class="btn btn-secondary btn-sm">{{ img.album.title }}</a>
 
     {% if prev_next_ids.next %}
-      <a href="{% url 'image' img.album.slug prev_next_ids.next %}" class="btn btn-sm btn-primary">Next &raquo;</a>
+      <a href="{% url 'image' prev_next_ids.next %}" class="btn btn-sm btn-primary">Next &raquo;</a>
     {% endif %}
   </div>
 

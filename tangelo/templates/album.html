@@ -11,16 +11,13 @@
 
   <div class="imagegrid mt-2">
     <div class="row">
-    {% for column in columns %}
-      <div class="column">
-        {% for image in column %}
-          {# Cache each image forever with its flickr ID (None = forever) #}
-          {% cache None flickr_thumb image.flickr_id %}
+      {% for column in columns %}
+        <div class="column">
+          {% for image in column %}
             {% image_thumb image %}
-          {% endcache %}
-        {% endfor %}
-      </div>
-    {% endfor %}
+          {% endfor %}
+        </div>
+      {% endfor %}
     </div>
   </div>
 

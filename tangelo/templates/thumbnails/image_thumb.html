@@ -1,9 +1,14 @@
 {% load static %}
-{# rendered repeatedly by render_thumbnail in album.html #}
+{% load cache %}
+
+{# Inclusion template rendered repeatedly by render_thumbnail in album.html. Caches individual image calls. #}
 
 <a href="{{ local_url}}">
   {% if embed_url %}
-    <img src="{{ embed_url }}" alt="Thumbnail image for album ({{ title }})">
+    {# Cache each image forever with its flickr ID (None = forever) #}
+    {% cache None flickr_thumb flickr_id %}
+      <img src="{{ embed_url }}" alt="Thumbnail image for album ({{ title }})">
+    {% endcache %}
   {% else %}
     <img src="{% static "img/default_thumb.jpg" %}" alt="Missing placeholder">
   {% endif %}

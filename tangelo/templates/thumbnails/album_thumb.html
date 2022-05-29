@@ -1,18 +1,21 @@
 {% load static %}
-{# rendered repeatedly by album_thum in home.html #}
+{% load cache %}
+
+{# Inclusion template rendered repeatedly by album_thum in home.html. Caches individual image calls. #}
 
 <div class="row">
   <a href="{{ local_url }}">
-    {# None = No expiration to cache - expire manually #}
-      <div class="col-12 mx-auto mb-4 album_thumb">
-        <img class="screen mr-4 rounded"
-          {% if embed_url %}
-            src="{{ embed_url }}"
-          {% else %}
-            src="/static/img/default_thumb.jpg"
-          {% endif %}
-          alt="Thumbnail image"
-        >
+    <div class="col-12 mx-auto mb-4 album_thumb">
+      {% if embed_url %}
+
+      {# Cache just the image, with no expiration - expire manually #}
+        {% cache None album_thumb slug %}
+          <img class="screen mr-4 rounded" src="{{ embed_url }}" alt="{{ title }} thumbnail" />
+        {% endcache %}
+
+        {% else %}
+        <img src="/static/img/default_thumb.jpg" alt="Thumbnail image" />
+      {% endif %}
         <br /><a href="{{ local_url }}">{{ title }}</a>
       </div>
     </a>
