@@ -11,10 +11,12 @@
     <div class="intro">{{ intro.body|markdownify }}</div>
   </div>
 
-  <div class="row">
-      {% for album in albums %}
-        {% album_thumb album %}
-      {% endfor %}
+  <div class="container">
+    <div class="row">
+        {% for album in albums %}
+          {% album_thumb album %}
+        {% endfor %}
+    </div>
   </div>
 
 {% endblock content %}
