@@ -189,6 +189,10 @@ django-jsoneditor==0.2.2 \
     --hash=sha256:334c9a48791c51b76d737f1aa0b047d4f9f85356acb2c15c1a5b5639202cadb6 \
     --hash=sha256:c4d9de033840e0b736ac1c4fcc56298a4a0470402db8aaf35d30567127d8397c
     # via -r base.in
+django-light==0.1.0.post3 \
+    --hash=sha256:74e7fc67c4aaaae304cb34529b5bb9e46b78ce6c87381c5edc00b7f4f84a422e \
+    --hash=sha256:921a09124f2a8db0c0ea3a8f06dede5782180b0398f901bc595305db7b622a90
+    # via -r base.in
 django-markdownify==0.9.1 \
     --hash=sha256:06ff2994ff09ce030b50de8c6fc5b89b9c25a66796948aff55370716ca1233af \
     --hash=sha256:24ba68b8a5996b6ec9632d11a3fd2e7159cb7e6becd3104e0a9372b5a2a148ef

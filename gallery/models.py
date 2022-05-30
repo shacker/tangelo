@@ -47,8 +47,8 @@ class Album(TimeStampedModel):
 
         flickr_data = None
         if self.cat_thumb:
-            flickr_data = asdict(
-                get_api_image_data(self.cat_thumb.flickr_id, size=settings.FLICKR_THUMBNAIL_SIZE)
+            flickr_data = get_api_image_data(
+                self.cat_thumb.flickr_id, size=settings.FLICKR_THUMBNAIL_SIZE
             )
 
         return flickr_data
@@ -175,7 +175,9 @@ class Image(TimeStampedModel):
         # secret = photo["secret"]
         # embed_url = f"https://live.staticflickr.com/{server}/{self.flickr_id}_{secret}_{size}.jpg"
         originalsecret = photo["originalsecret"]
-        embed_url = f"https://live.staticflickr.com/{server}/{self.flickr_id}_{originalsecret}_{size}.jpg"
+        embed_url = (
+            f"https://live.staticflickr.com/{server}/{self.flickr_id}_{originalsecret}_{size}.jpg"
+        )
 
         return embed_url
 
