@@ -28,6 +28,7 @@ FLICKR_USERNAME: "yourusername"
 # n = 320px on the long side
 FLICKR_IMAGE_SIZE: "b"
 FLICKR_THUMBNAIL_SIZE: "n"
+FLICKR_CROPPED_THUMB_SIZE: "q"
 ```
 
 As always, keep secrets out of version control! Your key should be in an environment variable.
@@ -41,7 +42,7 @@ This project uses [pip-tools](https://pypi.org/project/pip-tools/) and its pip-c
 pip-compile --generate-hashes --output-file=requirements.txt base.in
 
 # Single package
-pip-compile --generate-hashes --output-file=requirements.txt -P django-jsoneditor base.in
+pip-compile --generate-hashes --output-file=requirements.txt -P django-light base.in
 ```
 
 ### Difference between flush_cache and refetch

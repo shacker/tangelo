@@ -8,12 +8,12 @@ register = template.Library()
 @register.inclusion_tag("thumbnails/album_thumb.html")
 def album_thumb(album, *args, **kwargs):
     """Generate data needed for generating an ALBUM thumbnail into
-    inclusion template in decorator.
+    inclusion template in decorator (used on homepage).
     """
     album_url = reverse("album", kwargs={"slug": album.slug})
 
     embed_url = (
-        album.cat_thumb.get_embed_url(size=settings.FLICKR_THUMBNAIL_SIZE)
+        album.cat_thumb.get_embed_url(size=settings.FLICKR_CROPPED_THUMB_SIZE)
         if album.cat_thumb
         else None
     )
