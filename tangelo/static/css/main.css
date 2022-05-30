@@ -137,13 +137,18 @@ a.article-title:hover {
 
 /* End imagegrid layout */
 
+.intro {
+  font-family: 'Nunito', sans-serif;
+
+}
+
 h2.full_img_title, p.image_caption {
   color:#4b4b4b;
   font-size: 1.4rem;
 }
 
 h2.full_img_title, div.bodycontent, .navbar-brand {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto Slab', serif;
 }
 
 p.image_caption {
@@ -158,9 +163,12 @@ p.image_caption {
 }
 
 .album_thumb a, .bodycontent a {
-  color:#356282;
-  font-weight: bold;
-  font-family: 'Nunito', sans-serif;
+  color:#537389;
+  font-family: 'Roboto Slab', serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Roboto Slab', serif;
 }
 
 a.btn {

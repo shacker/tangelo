@@ -7,7 +7,7 @@
 {% block content %}
 
   <h2>{{ album }}</h2>
-  {{ album.about|markdownify }}
+  <div class="intro">{{ album.about|markdownify }}</div>
 
   <div class="imagegrid mt-2">
     <div class="row">
