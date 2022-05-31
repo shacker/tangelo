@@ -13,7 +13,7 @@ def album_thumb(album, *args, **kwargs):
     album_url = reverse("album", kwargs={"slug": album.slug})
 
     embed_url = (
-        album.cat_thumb.get_embed_url(size=settings.FLICKR_CROPPED_THUMB_SIZE)
+        album.cat_thumb.get_embed_url(size=settings.FLICKR_THUMBNAIL_SIZE)
         if album.cat_thumb
         else None
     )

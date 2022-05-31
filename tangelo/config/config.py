@@ -43,6 +43,8 @@ class AppConfig(GoodConf):
     # See table on this page for thumbnail size reference: https://www.flickr.com/services/api/misc.urls.html
     FLICKR_IMAGE_SIZE = Field(default="b", help="Image size for image detail view")
     FLICKR_THUMBNAIL_SIZE = Field(default="n", help="Thumnbail size for categories and images in grids")
+    # Not currently using - Flickr's largest square is 150px, which we have to scale up and it looks bad.
+    # Instead get size "n" and crop with CSS.
     FLICKR_CROPPED_THUMB_SIZE = Field(default="q", help="Cropped square thumnbail size for albums on homepage")
 
     class Config:

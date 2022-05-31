@@ -10,7 +10,7 @@
 
       {# Cache just the image, with no expiration - expire manually #}
         {% cache None album_thumb slug %}
-          <img class="screen mr-4 rounded" src="{{ embed_url }}" alt="{{ title }} width="200" height="200" thumbnail" />
+          <img class="screen mr-3 rounded album-thumb" src="{{ embed_url }}" alt="{{ title }} thumbnail" />
         {% endcache %}
 
         {% else %}

@@ -22,7 +22,12 @@ DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 
 # Static and media files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
+    STATIC_ROOT = "noop"
+else:
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
 MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
 
