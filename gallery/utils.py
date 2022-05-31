@@ -45,11 +45,11 @@ def get_prev_next_ids(img):
     # Start with a queryset of all images in this image's album, except self
     qs = Image.objects.filter(album=img.album).exclude(flickr_id=img.flickr_id)
 
-    next_id_qs = qs.filter(taken__gt=img.taken).order_by("taken")
+    next_id_qs = qs.filter(taken__lt=img.taken).order_by("-taken")
     if next_id_qs.exists():
         next_id = next_id_qs.first().flickr_id
 
-    prev_id_qs = qs.filter(taken__lt=img.taken).order_by("-taken")
+    prev_id_qs = qs.filter(taken__gt=img.taken).order_by("taken")
     if prev_id_qs.exists():
         prev_id = prev_id_qs.first().flickr_id
 
