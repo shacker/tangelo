@@ -1,5 +1,4 @@
 import logging
-from dataclasses import asdict
 
 from dateutil import parser
 from django.conf import settings
@@ -10,6 +9,7 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 from gallery.utils import get_api_image_data
+
 
 log = logging.getLogger(__name__)
 
@@ -127,8 +127,6 @@ class Image(TimeStampedModel):
             self.album_order = last_img_id + 1
         else:
             self.album_order = 1
-
-        self.save()
 
     def flush_cache(self):
         """Empty image cache for this image only.

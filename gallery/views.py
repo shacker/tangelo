@@ -101,4 +101,5 @@ def refetch(request, flickr_id: int):
 
     img = Image.objects.get(flickr_id=flickr_id)
     img.refetch()
+    img.save()
     return redirect(reverse("image", kwargs={"flickr_id": flickr_id}))
