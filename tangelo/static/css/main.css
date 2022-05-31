@@ -165,6 +165,7 @@ p.image_caption {
 .album_thumb a, .bodycontent a {
   color:#537389;
   font-family: 'Roboto Slab', serif;
+  font-size: .95rem;
 }
 
 h1, h2, h3 {

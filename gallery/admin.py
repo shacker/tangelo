@@ -27,7 +27,7 @@ class ImageAdmin(admin.ModelAdmin):
     list_filter = ("album",)
     actions = [flush_image_cache]
     ordering = ["-taken",]
-    search_fields = ("title",)
+    search_fields = ("title", "flickr_id")
     formfield_overrides = {models.JSONField: {"widget": JSONEditor()}}
 
 
