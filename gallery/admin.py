@@ -23,6 +23,7 @@ def flush_album_thumb_cache(modeladmin, request, queryset):
 
 
 class ImageAdmin(admin.ModelAdmin):
+    fields = ("flickr_id", "album", "image_api_data", "title", "taken", "album_order")
     list_display = ("title", "flickr_id", "album", "taken")
     list_filter = ("album",)
     actions = [flush_image_cache]
