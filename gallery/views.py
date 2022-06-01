@@ -11,7 +11,7 @@ from gallery.utils import get_prev_next_ids
 
 
 def home(request):
-    """Show about text and array of album thumbnails"""
+    """Show about text and array of square thumbnails representing albums."""
 
     try:
         intro = SimplePage.objects.get(slug="intro")
@@ -32,6 +32,7 @@ def album(request, slug: str):
     # in rows, respecting album image order left to right. So we set up four lists - one for each column.
     # Then iterate through images and drop them in columns, in order. On the resulting page, we render
     # thumbnails in columns, not rows.
+    # Reference: https://www.w3schools.com/howto/howto_css_image_grid_responsive.asp
     columns = [[], [], [], []]
     cycled_columns = cycle(columns)
     for image in images:

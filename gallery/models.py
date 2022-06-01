@@ -170,8 +170,6 @@ class Image(TimeStampedModel):
 
         # Per docs, use 'secret' for images below 1600px,
         # 'originalsecret' for images 1600 or larger.
-        # secret = photo["secret"]
-        # embed_url = f"https://live.staticflickr.com/{server}/{self.flickr_id}_{secret}_{size}.jpg"
         originalsecret = photo["originalsecret"]
         embed_url = (
             f"https://live.staticflickr.com/{server}/{self.flickr_id}_{originalsecret}_{size}.jpg"

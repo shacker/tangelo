@@ -69,7 +69,7 @@ def nuclear(clear: bool = True, refetch: bool = False):
 
     if refetch:
         """Rarely needed -"""
-        from gallery.models import Imagemo
+        from gallery.models import Image
 
         for image in Image.objects.all():
             log.info(f"Re-fetching API data for image {image.flickr_id}")
