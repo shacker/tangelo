@@ -7,43 +7,50 @@
 
   <h2 class="full_img_title">{{ img_data.title }}</h2>
 
-  {% cache None flickr_full img.flickr_id %}
-      <a
-        data-flickr-embed="true"
-        href="{{ img_data.flickr_page_url }}"
-        title="{{ img_data.title }}">
-        <img src="{{ img_data.flickr_embed_url }}" class="img-fluid" alt="{{ img_data.title }}">
-      </a>
-      <p class="mt-2 image_caption">
-        {% if img_data.description %}
-          {{ img_data.description|safe }}<br />
-        {% endif %}
-        <small>
-          In <a href="{% url 'album' img.album.slug %}" class="btn btn-secondary btn-sm">{{ img.album.title }}</a>.
-          Taken: {{ img.taken|date }}
-        </small>
-      </p>
-  {% endcache %}
+  <div id="demo" class="carousel slide" data-ride="carousel">
 
+    <!-- Image in BS carousel  -->
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        {% cache None flickr_full img.flickr_id %}
+          <img src="{{ img_data.flickr_embed_url }}" class="img-fluid" alt="{{ img_data.title }}">
+        {% endcache %}
+      </div>
+    </div>
 
-  <div class="navigation">
+    <!-- Prev/next controls -->
     {% if prev_next_ids.prev %}
-      <a href="{% url 'image' prev_next_ids.prev %}" class="btn btn-sm btn-primary">&laquo; Previous</a>
+      <a class="carousel-control-prev" href="{% url 'image' prev_next_ids.prev %}" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </a>
     {% endif %}
 
-
-
     {% if prev_next_ids.next %}
-      <a href="{% url 'image' prev_next_ids.next %}" class="btn btn-sm btn-primary">Next &raquo;</a>
+      <a class="carousel-control-next" href="{% url 'image' prev_next_ids.next %}" role="button" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </a>
     {% endif %}
   </div>
 
+  <!-- Title and caption -->
+  <p class="mt-2 image_caption">
+    {% if img_data.description %}
+      {{ img_data.description|safe }}<br />
+    {% endif %}
+    <small>
+      In <a href="{% url 'album' img.album.slug %}">{{ img.album.title }}</a>.
+      Taken: {{ img.taken|date }}
+    </small>
+  </p>
+
+  <!-- Flickr link -->
    <p>
     <a href="{{ img_data.flickr_page_url }}" target="_blank">
       <img src="{% static "ico/flickr-icon.png" %}" alt="Flickr icon" width="50">
     </a>
   </p>
 
+  <!-- Superuser controls -->
   {% if user.is_superuser %}
     <p class="small muted-text float-right">
       <a href="{% url 'admin:gallery_image_change' img.id %}">Edit</a> |
@@ -53,3 +60,24 @@
   {% endif %}
 
 {% endblock content %}
+
+
+{% block extra_js %}
+  <script type="text/javascript">
+
+    // Enable keyboard navigation
+    jQuery(document).bind('keyup', function(e) {
+    if (e.keyCode==39) {
+      $('a.carousel-control-next').get(0).click();
+    }
+
+    else if (e.keyCode==37) {
+        $('a.carousel-control-prev').get(0).click();
+    }
+    });
+
+  </script>
+
+{% endblock extra_js %}
+
+

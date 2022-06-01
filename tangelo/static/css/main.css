@@ -183,3 +183,10 @@ img.album-thumb {
   height:200px;
   object-fit:cover;
 }
+
+
+/* Size of arrow icons in image carousel */
+.carousel-control-prev-icon, .carousel-control-next-icon  {
+  width: 36px;
+  height: 36px;
+}
