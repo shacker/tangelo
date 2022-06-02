@@ -159,7 +159,7 @@ class Image(TimeStampedModel):
         Args:
             size: Optional suffix mapping, per URL docs:
             https://www.flickr.com/services/api/misc.urls.html
-            Defaults to "b" (1024 on the long side)
+            Defaults to "h" (1600 on the long side)
 
         Returns:
             A fully formed URL suitable for use in <img src="xxx">
