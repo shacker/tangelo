@@ -13,7 +13,7 @@ familiar with Django, this project is not for you (try WordPress, or SquareSpace
 Portfolios instead).
 
 Anyone is free to help themselves to this source code, or even to make pull requests, but I will not
-support users who are learning Django for the first time.
+support users who are learning Django.
 
 
 ## Installation
@@ -65,15 +65,14 @@ pip-compile --generate-hashes --output-file=requirements.txt -P django-jsonedito
 
 Superuser will have a few links at the bottom of each image:
 
-- Admin: Links to Admin edit view for this image
-- Refetch: Reaches out to Flickr and overwrites our locally stored db data for this image
+- Edit: Links to Django Admin edit view for this image
+- Refetch: Reaches out to Flickr and overwrites our locally stored API data for this image
 - Flush cache: Leave our db alone, but erase the redis cached data for this image so it's
-  regenerated on next load
+  displayed with updates on next load
 
 ### Known Issues
 
-- Image has an album_order field that was initially meant for controlling the order of images as
+- Image model has an `album_order` field that was initially meant for controlling the order of images as
 they appear in an album. But I had an issue with the drag/drop util I was using to make that easy,
-switch to date- based ordering, and decided I liked that better. The old method is still half-there
-- could be a user option in the future.
+so I switched to date-based ordering. The old method is still half-there. Could be a user option in the future.
 
