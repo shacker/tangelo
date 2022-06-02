@@ -37,8 +37,9 @@ FLICKR_USERNAME: "yourusername"
 # See table on this page for image size reference:
 # https://www.flickr.com/services/api/misc.urls.html
 # b = 1024 on the long side
+# h = 1024 on the long side
 # n = 320px on the long side
-FLICKR_IMAGE_SIZE: "b"
+FLICKR_IMAGE_SIZE: "h"
 FLICKR_THUMBNAIL_SIZE: "n"
 FLICKR_CROPPED_THUMB_SIZE: "q"
 ```
