@@ -52,7 +52,7 @@
 
   <!-- Superuser controls -->
   {% if user.is_superuser %}
-    <p class="small muted-text float-right">
+    <p class="small muted-text">
       <a href="{% url 'admin:gallery_image_change' img.id %}">Edit</a> |
       <a href="{% url 'refetch' img.flickr_id %}">Refetch</a> |
       <a href="{% url 'flush_cache' img.flickr_id %}">Flush</a>
@@ -64,20 +64,16 @@
 
 {% block extra_js %}
   <script type="text/javascript">
-
     // Enable keyboard navigation
-    jQuery(document).bind('keyup', function(e) {
-    if (e.keyCode==39) {
-      $('a.carousel-control-next').get(0).click();
-    }
-
-    else if (e.keyCode==37) {
+    $(document).bind('keyup', function(e) {
+      if (e.keyCode==39) {
+        $('a.carousel-control-next').get(0).click();
+      }
+      else if (e.keyCode==37) {
         $('a.carousel-control-prev').get(0).click();
-    }
+      }
     });
-
   </script>
-
 {% endblock extra_js %}
 
 
