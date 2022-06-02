@@ -60,8 +60,6 @@ def nuclear(clear: bool = True, refetch: bool = False):
     """Depending on args:
     Clears all caches (default True)
     Refetch all API data from Flickr (default False)
-
-    TODO: Let this work on a single image?
     """
     log.info("Flusing all caches")
     call_command("clear_cache")

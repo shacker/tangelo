@@ -5,6 +5,8 @@ For additional performance, the raw image data is stored in redis cache, for fas
 
 A working example can be viewed at [shacker.net](https://shacker.net)
 
+A demo video of the core concepts can be viewed [here](https://www.youtube.com/watch?v=Orn_mZ8quqE)
+
 *This is a gallery system for Python coders who also happen to be Flickr users, not for the
 general public.* If you want a gallery system that doesn’t require writing or maintaining code, or if you are not
 familiar with Django, this project is not for you (try WordPress, or SquareSpace, or Lightroom
