@@ -41,7 +41,6 @@ class Album(TimeStampedModel):
         help_text="Each album should be associated with one of the images in that album, to be used in web layouts.",
     )
 
-
     class Meta:
         ordering = ["title"]
 
@@ -180,6 +179,35 @@ class Image(TimeStampedModel):
         )
 
         return embed_url
+
+    def get_prev_next_ids(self):
+        """Given an Image instance, finds the previous and next
+            Image IDs in an album, based on `taken` (date taken).
+            n.b. Originally written to order by manual `album_order`
+            but decided I preferred simple auto date ordering to keep things fresh.
+
+        Returns:
+            {"prev": prev_id, "next": next_id}
+            Either of these can be None if there is no previous or next.
+        """
+
+        from gallery.models import Image
+
+        next_id = None
+        prev_id = None
+
+        # Start with a queryset of all images in this image's album, except self
+        qs = Image.objects.filter(album=self.album).exclude(flickr_id=self.flickr_id)
+
+        next_id_qs = qs.filter(taken__lt=self.taken).order_by("-taken")
+        if next_id_qs.exists():
+            next_id = next_id_qs.first().flickr_id
+
+        prev_id_qs = qs.filter(taken__gt=self.taken).order_by("taken")
+        if prev_id_qs.exists():
+            prev_id = prev_id_qs.first().flickr_id
+
+        return {"prev": prev_id, "next": next_id}
 
     def save(self, *args, **kwargs):
         """On first save of an image, auto-populate title and date

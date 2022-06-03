@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from gallery.forms import ContactForm
 from gallery.models import Album, Image, SimplePage
-from gallery.utils import get_prev_next_ids
 
 
 def home(request):
@@ -50,7 +49,7 @@ def image(request, flickr_id: int):
     # without a valid flickr_id passed in.
     img = get_object_or_404(Image, flickr_id=flickr_id)
     img_data = img.get_page_data()
-    prev_next_ids = get_prev_next_ids(img)
+    prev_next_ids = img.get_prev_next_ids()
 
     ctx = {
         "img": img,
