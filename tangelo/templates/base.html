@@ -21,15 +21,8 @@
 
     <title>{% block title %}images by shacker{% endblock title %}</title>
 
-    {% comment %} Controls the image that is embedded when sharing to social media {% endcomment %}
-    <meta property="og:image" content="https://shacker.net/static/img/embeddable_ventanta_trees.jpeg">
-    <meta property="og:image:type" content="image/jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="887">
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.shacker.net/"/>
-    <meta property="og:title" content="images by shacker" />
-    <meta property="og:description" content="I'm blessed to live in the amazing Bay Area, and to be able to explore all its nooks and crannies. Hills and hiking trails, a beautiful coastline and bay, great cycling roads, fascinating city life - I find the Bay Area endlessly fascinating. I post two or three images per day to Flickr, and made this site to feature some of those in a more focused space." />
+    {% comment %} Describes the image that is embedded when sharing to social media {% endcomment %}
+    {% block og_image %}{% endblock og_image %}
 
    </head>
    <body>

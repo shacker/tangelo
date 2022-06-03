@@ -1,7 +1,16 @@
 {% extends 'base.html' %}
-{% load static cache %}
+{% load static cache markdownify %}
 
 {% block title %}{{ block.super }} - {{ img_data.title }}{% endblock title %}
+
+{% block og_image %}
+  {# Describes the image that is embedded when sharing to social media #}
+  <meta property="og:image" content="{{ og_img_url }}">
+  <meta property="og:image:type" content="image/jpg">
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
+  <meta property="og:title" content="{{ img.title }} by shacker" />
+{% endblock og_image %}
 
 {% block content %}
 

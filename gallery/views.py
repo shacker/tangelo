@@ -37,7 +37,11 @@ def album(request, slug: str):
     for image in images:
         next(cycled_columns).append(image)
 
-    ctx = {"album": album, "columns": columns}
+    ctx = {
+        "album": album,
+        "columns": columns,
+        "og_img_url": album.cat_thumb.get_embed_url(size="b"),
+    }
     return render(request, "album.html", context=ctx)
 
 
@@ -55,6 +59,7 @@ def image(request, flickr_id: int):
         "img": img,
         "img_data": img_data,
         "prev_next_ids": prev_next_ids,
+        "og_img_url": img.get_embed_url(size="b"),
     }
 
     return render(request, "image.html", context=ctx)

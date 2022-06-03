@@ -1,7 +1,5 @@
 import logging
 
-import flickrapi
-from django.conf import settings
 from django.core.management import call_command
 
 log = logging.getLogger(__name__)

@@ -3,9 +3,19 @@
 {% load album_thumb %}
 {% block title %}{{ block.super }}{% endblock title %}
 
+{% block og_image %}
+  {% comment %} Describes the image that is embedded when sharing to social media {% endcomment %}
+  <meta property="og:image" content="https://shacker.net/static/img/embeddable_ventana_trees.jpeg">
+  <meta property="og:image:type" content="image/jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="887">
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.shacker.net/"/>
+  <meta property="og:title" content="images by shacker" />
+  <meta property="og:description" content="Photography by Scot Hacker - Bay Area, nature, urbex, people, the built world. Seeking out unique perspectives in unique places." />
+{% endblock og_image %}
+
 {% block content %}
-
-
   <div class="mr-6">
     <h3>Photography by Scot Hacker</h3>
     <div class="intro">{{ intro.body|markdownify }}</div>
