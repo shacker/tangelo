@@ -7,25 +7,6 @@ from django.core.management import call_command
 log = logging.getLogger(__name__)
 
 
-def get_api_image_data(flickr_id: int):
-    """
-    Use Flickr's getInfo() API to get metadata about an image by ID.
-    https://www.flickr.com/services/api/flickr.photos.getInfo.html
-
-    Args:
-        flickr_id: int
-
-    Returns
-        Raw API response data
-    """
-
-    flickr = flickrapi.FlickrAPI(
-        settings.FLICKR_API_KEY, settings.FLICKR_API_SECRET, format="parsed-json"
-    )
-    response = flickr.photos.getInfo(photo_id=flickr_id)
-    return response
-
-
 def get_prev_next_ids(img):
     """Given an Image instance, finds the previous and next
         Image IDs in an album, based on `taken` (date taken).

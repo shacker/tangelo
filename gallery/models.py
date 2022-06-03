@@ -1,5 +1,6 @@
 import logging
 
+import flickrapi
 from dateutil import parser
 from django.conf import settings
 from django.core.cache import cache
@@ -7,8 +8,6 @@ from django.core.cache.utils import make_template_fragment_key
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
-
-from gallery.utils import get_api_image_data
 
 
 log = logging.getLogger(__name__)
@@ -42,16 +41,6 @@ class Album(TimeStampedModel):
         help_text="Each album should be associated with one of the images in that album, to be used in web layouts.",
     )
 
-    def get_thumbnail(self):
-        """Using the `cat_thumb` field on this album, get thumbnail image for this album via Flickr API."""
-
-        flickr_data = None
-        if self.cat_thumb:
-            flickr_data = get_api_image_data(
-                self.cat_thumb.flickr_id, size=settings.FLICKR_THUMBNAIL_SIZE
-            )
-
-        return flickr_data
 
     class Meta:
         ordering = ["title"]
@@ -102,12 +91,27 @@ class Image(TimeStampedModel):
 
     # ### START METHODS ###
 
+    def get_api_image_data(self):
+        """
+        Use Flickr's getInfo() API to get metadata about an image by ID.
+        https://www.flickr.com/services/api/flickr.photos.getInfo.html
+
+        Returns
+            Raw API response data
+        """
+
+        flickr = flickrapi.FlickrAPI(
+            settings.FLICKR_API_KEY, settings.FLICKR_API_SECRET, format="parsed-json"
+        )
+        response = flickr.photos.getInfo(photo_id=self.flickr_id)
+        return response
+
     def refetch(self):
         """We normally don't overwrite our own db entries after the first
         save. But if this is called, we DO reach out to Flickr API again
         to grab all data and repopulate our own db.
         """
-        response = get_api_image_data(flickr_id=self.flickr_id)
+        response = self.get_api_image_data()
 
         # Store API result in our own db
         self.image_api_data = response
