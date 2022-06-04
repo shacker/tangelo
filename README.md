@@ -4,6 +4,8 @@ Rather than uploading images to your gallery site, site owners simple enter Flic
 
 For additional performance, the raw image data is stored in redis cache, for fastest possible image display.
 
+FWIW, the Flickr API rate limit is 3600 queries per hour, so it's unlikely most users would ever hit the limit, but caching pretty much prevents the possibility.
+
 A working example can be viewed at [shacker.net](https://shacker.net)
 
 A demo video of the core concepts can be viewed [here](https://www.youtube.com/watch?v=K5676XDifrs)
