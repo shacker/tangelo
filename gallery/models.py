@@ -191,8 +191,6 @@ class Image(TimeStampedModel):
             Either of these can be None if there is no previous or next.
         """
 
-        from gallery.models import Image
-
         next_id = None
         prev_id = None
 

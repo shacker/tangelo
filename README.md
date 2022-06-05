@@ -11,7 +11,7 @@ A working example can be viewed at [shacker.net](https://shacker.net)
 A demo video of the core concepts can be viewed [here](https://www.youtube.com/watch?v=K5676XDifrs)
 
 *This is a gallery system for Python coders who also happen to be Flickr users, not for the
-general public.* If you want a gallery system that doesn’t require writing or maintaining code, or if you are not familiar with Django, this project is not for you (try WordPress, or  quareSpace, or Lightroom Portfolios instead).
+general public.* If you want a gallery system that doesn’t require writing or maintaining code, or if you are not familiar with Django, this project is not for you (try WordPress, or  SquareSpace, or Lightroom Portfolios instead).
 
 Anyone is free to help themselves to this source code, or even to make pull requests, but I will not support users who are learning Django or trying to deploy their first Django website.
 
@@ -20,7 +20,7 @@ This repo represents a full Django project, not a reusable app. As a result, it 
 installable. Clone this repo and deploy it from a git checkout using your deployment system of
 choice.
 
-Set up is the usual - configure your database and media/static paths, `pip install -r requirements.txt`, etc.
+Setup is the usual - configure your database and media/static paths, `pip install -r requirements.txt`, etc.
 
 This project is a bit unusual in having no local.py - instead use local.yml for localhost, and put
 secrets in environment variables in your deployed server (env vars are read into settings via Goodconf).

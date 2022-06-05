@@ -111,7 +111,6 @@ CACHES = {
 # Cache lifetime - 1 year default (superuser use Clear Cache link on site)
 CACHE_TTL = config.CACHE_TTL
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
