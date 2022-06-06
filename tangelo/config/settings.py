@@ -137,7 +137,7 @@ FLICKR_CROPPED_THUMB_SIZE = config.FLICKR_CROPPED_THUMB_SIZE
 FLICKR_IMAGE_SIZE = config.FLICKR_IMAGE_SIZE
 
 # Defines how Markdownify bleaches/sanitizes, or allows HTML tags and attributes
-# Allow myself (the onlyh administrator) to post any content type -
+# Allow myself (the only administrator) to post any content type -
 # other sites may want to lock this down.
 MARKDOWNIFY = {
     "default": {
