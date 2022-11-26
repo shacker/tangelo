@@ -66,6 +66,11 @@ Superuser will have a few links at the bottom of each image:
 - Flush cache: Leave our db alone, but erases the cached redis data for this image so it's
   displayed with updates on next page load.
 
+To wipe the entire site cache:
+
+`./manage.py nuclear`
+
+
 ### Known Issues
 
 - Image model has an `album_order` field that was initially meant for controlling the order of images as they appear in an album. But I had an issue with the drag/drop util I was using to make that easy, so I switched to date-based ordering. The old method is still half-there. Could be a user option in the future.
