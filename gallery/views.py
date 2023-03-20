@@ -1,7 +1,7 @@
 from itertools import cycle
 
 from django.conf import settings
-from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import BadHeaderError, EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 
@@ -81,7 +81,14 @@ def contact(request):
             your_email = form.cleaned_data["your_email"]
             message = form.cleaned_data["message"]
             try:
-                send_mail(subject, message, your_email, settings.MANAGERS, fail_silently=False)
+                email = EmailMessage(
+                    subject,
+                    message,
+                    your_email,
+                    settings.MANAGERS,
+                    reply_to=[your_email],
+                )
+                email.send(fail_silently=False)
             except BadHeaderError:
                 return HttpResponse("Invalid header found.")
             return redirect("contact_success")
