@@ -14,6 +14,6 @@ flickrapi
 goodconf
 gunicorn
 icecream
-psycopg2
+psycopg2-binary
 redis
 ruamel.yaml  # Used by goodconf
