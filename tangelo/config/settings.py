@@ -26,7 +26,7 @@ if DEBUG:
     STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
     STATIC_ROOT = "noop"
 else:
-    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
