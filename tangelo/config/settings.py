@@ -154,7 +154,7 @@ if not DEBUG:
             'file': {
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
-                'filename': '/home/django/tangelo_debug.log',
+                'filename': '/home/shacker/django/tangelo_debug.log',
             },
         },
         'loggers': {
