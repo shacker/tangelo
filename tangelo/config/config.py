@@ -4,17 +4,17 @@ from pathlib import Path
 
 from goodconf import Field, GoodConf
 
-
-PROJECT_ROOT = Path(__file__).parents[1].resolve()
+# Make this the same as in main settings:
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class AppConfig(GoodConf):
-    """Configuration for Greenhouse. Attempts to pull environment variables from
-    the running instance and store them as Django settings for use in code."""
+    """Pulls environment variables from the running instance
+    and stores them as Django settings for use in code."""
 
-    ALLOWED_HOSTS = Field(default=["*"])
-    DEBUG = Field(default=False, help="Toggle debugging.")
-    DATABASE_URL = Field(
+    ALLOWED_HOSTS: list[str] = Field(default=["*"])
+    DEBUG: bool = Field(default=False, help="Toggle debugging.")
+    DATABASE_URL: str = Field(
         default="postgres://localhost:5432/greenhouse", help="Database connection."
     )
     # REDIS_URL = Field(default="redis://127.0.0.1:6379")
@@ -24,25 +24,32 @@ class AppConfig(GoodConf):
         description="Used for cryptographic signing. "
         "https://docs.djangoproject.com/en/2.0/ref/settings/#secret-key",
     )
-    MEDIA_ROOT = Field(default=str(PROJECT_ROOT / "media"))
-    STATIC_ROOT = Field(default=str(PROJECT_ROOT / "staticfiles"))
+    MEDIA_ROOT: str = Field(default=str(BASE_DIR / "media"))
+    STATIC_ROOT: str = Field(default=str(BASE_DIR / "staticfiles"))
 
-    CACHE_BACKEND = Field(default="django.core.cache.backends.redis.RedisCache")
-    CACHE_TTL = Field(default=(60 * 60 * 24 * 365))  # One year - cache "permanently" until cleared
+    CACHE_BACKEND: str = Field(default="django.core.cache.backends.redis.RedisCache")
+    CACHE_TTL: int = Field(default=(60 * 60 * 24 * 365))  # One year - cache "permanently" until cleared
+    # REDIS_PREFIX: str = Field(default="tangelo/")
+    # REDIS_URL: str = Field(default="redis://127.0.0.1:6379")
 
-    EMAIL_BACKEND = Field(default="django.core.mail.backends.console.EmailBackend")
-    EMAIL_HOST_PASSWORD = Field(default="", help="SMTP email pass")
+    EMAIL_BACKEND: str = Field(default="django.core.mail.backends.console.EmailBackend")
+    EMAIL_HOST_PASSWORD: str = Field(default="", help="SMTP email pass")
 
-    FLICKR_API_KEY = Field(default="", help="API key issued by Flickr")
-    FLICKR_API_SECRET = Field(default="", help="API secret issued by Flickr")
-    FLICKR_USERNAME = Field(default="", help="Flickr username")
+    FLICKR_API_KEY: str = Field(default="", help="API key issued by Flickr")
+    FLICKR_API_SECRET: str = Field(default="", help="API secret issued by Flickr")
+    FLICKR_USERNAME: str = Field(default="", help="Flickr username")
 
     # See table on this page for thumbnail size reference: https://www.flickr.com/services/api/misc.urls.html
-    FLICKR_IMAGE_SIZE = Field(default="h", help="Image size for image detail view")
-    FLICKR_THUMBNAIL_SIZE = Field(default="n", help="Thumnbail size for categories and images in grids")
+    FLICKR_IMAGE_SIZE: str = Field(default="h", help="Image size for image detail view")
+    FLICKR_THUMBNAIL_SIZE: str = Field(default="n", help="Thumnbail size for categories and images in grids")
     # Not currently using - Flickr's largest square is 150px, which we have to scale up and it looks bad.
     # Instead get size "n" and crop with CSS.
-    FLICKR_CROPPED_THUMB_SIZE = Field(default="q", help="Cropped square thumnbail size for albums on homepage")
+    FLICKR_CROPPED_THUMB_SIZE: str = Field(default="q", help="Cropped square thumnbail size for albums on homepage")
+
+    LUMAPRINT_API_URL: str = Field(default="us.api.lumaprints.com", help="Override with sandbox URL locally")
+    LUMAPRINT_API_KEY: str = Field(default="", help="")
+    LUMAPRINT_API_SECRET: str = Field(default="", help="")
+
 
     class Config:
         # Load config from file in GREENHOUSE_CONF env var or `greenhouse.yml` in the cwd
