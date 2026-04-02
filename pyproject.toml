@@ -1,0 +1,25 @@
+[project]
+name = "tangelo"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "black",
+    "dateutils",
+    "dj-database-url",
+    "django",
+    "django-admin-sortable2",
+    "django-crispy-forms",
+    "django-extensions",
+    "django-jsoneditor",
+    "django-light",
+    "django-markdownify",
+    "fabric",
+    "flake8",
+    "flickrapi",
+    "goodconf",
+    "gunicorn",
+    "icecream",
+    "psycopg2-binary",
+    "redis",
+    "ruamel.yaml",
+]

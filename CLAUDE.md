@@ -10,20 +10,29 @@ enter Flickr IDs, and the app fetches and caches full API metadata. Cached data 
 
 ## Common Commands
 
+This project uses `uv` for dependency management. Dependencies are declared in `pyproject.toml`;
+`uv.lock` is the lockfile.
+
 ```bash
-python manage.py runserver
-python manage.py migrate
-python manage.py collectstatic
-python manage.py nuclear              # clear all caches
-python manage.py nuclear --refetch    # clear caches + re-pull all Flickr data
-python manage.py test gallery
-python manage.py test gallery.tests.ClassName.test_method
+uv sync                          # install/sync all deps
+uv add <package>                 # add a dependency
+uv remove <package>              # remove a dependency
+uv lock --upgrade                # update all deps
+uv lock --upgrade-package django # update one dep
+
+uv run python manage.py runserver
+uv run python manage.py migrate
+uv run python manage.py collectstatic
+uv run python manage.py nuclear              # clear all caches
+uv run python manage.py nuclear --refetch    # clear caches + re-pull all Flickr data
+uv run python manage.py test gallery
+uv run python manage.py test gallery.tests.ClassName.test_method
 ```
 
 Code quality (no config files; use defaults):
 ```bash
-black .
-flake8 .
+uv run black .
+uv run flake8 .
 ```
 
 ## Architecture

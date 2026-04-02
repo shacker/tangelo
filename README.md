@@ -20,7 +20,30 @@ This repo represents a full Django project, not a reusable app. As a result, it 
 installable. Clone this repo and deploy it from a git checkout using your deployment system of
 choice.
 
-Setup is the usual - configure your database and media/static paths, `pip install -r requirements.txt`, etc.
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
+
+```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create venv and install all dependencies
+uv sync
+
+# Add a new dependency
+uv add django-debug-toolbar
+
+# Remove a dependency
+uv remove some-package
+
+# Update all dependencies
+uv lock --upgrade
+
+# Update a single package
+uv lock --upgrade-package django
+
+# Run a command inside the venv without activating it
+uv run python manage.py runserver
+```
 
 This project is a bit unusual in having no local.py - instead use local.yml for localhost, and put
 secrets in environment variables in your deployed server (env vars are read into settings via Goodconf).
@@ -44,18 +67,6 @@ FLICKR_CROPPED_THUMB_SIZE: "q"
 ```
 
 As always, keep secrets out of version control!
-
-### Changing/Updating Python Dependencies
-
-This project uses [pip-tools](https://pypi.org/project/pip-tools/) and its `pip-compile` to generate hashes for dependency installation. To add or update deps:
-
-```
-# Full:
-pip-compile --generate-hashes --output-file=requirements.txt base.in
-
-# Single package
-pip-compile --generate-hashes --output-file=requirements.txt -P django-jsoneditor base.in
-```
 
 ### Difference between flush_cache and refetch
 
