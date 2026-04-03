@@ -77,7 +77,7 @@ def contact(request):
     else:
         form = ContactForm(request.POST)
         if form.is_valid():
-            subject = form.cleaned_data["subject"]
+            subject = "Message from shacker.net: " + form.cleaned_data["subject"]
             your_email = form.cleaned_data["your_email"]
             message = form.cleaned_data["message"]
             try:
