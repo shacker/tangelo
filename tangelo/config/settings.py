@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "markdownify.apps.MarkdownifyConfig",
     "adminsortable2",
     "crispy_forms",
+    "crispy_bootstrap4",
     "jsoneditor",
 ]
 
