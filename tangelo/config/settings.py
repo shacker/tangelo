@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "gallery",
     "markdownify.apps.MarkdownifyConfig",
-    "adminsortable2",
+    # "adminsortable2",
     "crispy_forms",
     "crispy_bootstrap4",
     "jsoneditor",

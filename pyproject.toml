@@ -7,7 +7,6 @@ dependencies = [
     "dateutils",
     "dj-database-url",
     "django",
-    "django-admin-sortable2",
     "django-crispy-forms",
     "crispy-bootstrap4",
     "django-extensions",
