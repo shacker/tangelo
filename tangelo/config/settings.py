@@ -23,10 +23,8 @@ DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 # Static and media files (CSS, JavaScript, Images)
 STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
 STATIC_URL = "/static/"
-if DEBUG:
-    STATIC_ROOT = "noop"
-else:
-    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
@@ -45,7 +43,7 @@ INSTALLED_APPS = [
     # "adminsortable2",
     "crispy_forms",
     "crispy_bootstrap4",
-    "jsoneditor",
+    # "jsoneditor",
 ]
 
 MIDDLEWARE = [
