@@ -12,7 +12,6 @@ dependencies = [
     "crispy-bootstrap4",
     "django-extensions",
     "django-jsoneditor",
-    "django-light",
     "django-markdownify",
     "fabric",
     "flake8",

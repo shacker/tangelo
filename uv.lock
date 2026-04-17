@@ -446,15 +446,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-light"
-version = "0.1.0.post3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b2/0c/187b964baa8499605b2f4a45243c4bb315f93fa10a7b03cce4b6f98af90f/django-light-0.1.0.post3.tar.gz", hash = "sha256:74e7fc67c4aaaae304cb34529b5bb9e46b78ce6c87381c5edc00b7f4f84a422e", size = 3344, upload-time = "2021-09-08T13:15:42.867Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ee/10/c7f5f75ec4471eb7daf409e8150828cabf85c22f281f187ad1173a75e8af/django_light-0.1.0.post3-py3-none-any.whl", hash = "sha256:921a09124f2a8db0c0ea3a8f06dede5782180b0398f901bc595305db7b622a90", size = 3769, upload-time = "2021-09-08T13:15:41.68Z" },
-]
-
-[[package]]
 name = "django-markdownify"
 version = "0.9.6"
 source = { registry = "https://pypi.org/simple" }
@@ -984,7 +975,6 @@ dependencies = [
     { name = "django-crispy-forms" },
     { name = "django-extensions" },
     { name = "django-jsoneditor" },
-    { name = "django-light" },
     { name = "django-markdownify" },
     { name = "fabric" },
     { name = "flake8" },
@@ -1008,7 +998,6 @@ requires-dist = [
     { name = "django-crispy-forms" },
     { name = "django-extensions" },
     { name = "django-jsoneditor" },
-    { name = "django-light" },
     { name = "django-markdownify" },
     { name = "fabric" },
     { name = "flake8" },
