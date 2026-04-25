@@ -24,8 +24,8 @@ DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-
+# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles') # old
+STATIC_ROOT = config.STATIC_ROOT
 MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
 
