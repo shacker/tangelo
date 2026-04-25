@@ -18,7 +18,7 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 
 # Static and media files (CSS, JavaScript, Images)
-STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "staticfiles")]
+STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
 STATIC_URL = "/static/"
 
 STATIC_ROOT = config.STATIC_ROOT
