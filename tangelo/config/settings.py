@@ -156,3 +156,8 @@ EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.dreamhost.com'
 EMAIL_HOST_USER = 'gmailsender@birdhouse.org'
 EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
