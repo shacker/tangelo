@@ -1,13 +1,9 @@
-import os
 import dj_database_url
-from pathlib import Path
-
-from .config import config  # Load secrets from settings.conf
+from .config import config, PROJECT_ROOT  # Load secrets from settings.conf
 
 config.load()
 
-
-PROJECT_ROOT = config.PROJECT_ROOT
+PROJECT_ROOT = PROJECT_ROOT / "tangelo"
 SECRET_KEY = config.SECRET_KEY
 DEBUG = config.DEBUG
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
@@ -15,7 +11,7 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 
 # Static and media files (CSS, JavaScript, Images)
-STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
+STATICFILES_DIRS = [PROJECT_ROOT / "static"]
 STATIC_URL = "/static/"
 
 STATIC_ROOT = config.STATIC_ROOT
@@ -54,7 +50,7 @@ ROOT_URLCONF = "tangelo.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [f"{str(PROJECT_ROOT)}/templates"],
+        "DIRS": [PROJECT_ROOT / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
