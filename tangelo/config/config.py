@@ -18,21 +18,16 @@ class AppConfig(GoodConf):
     DATABASE_URL: str = Field(
         default="postgres://localhost:5432/greenhouse", help="Database connection."
     )
-    # REDIS_URL = Field(default="redis://127.0.0.1:6379")
-    # REDIS_PREFIX = Field(default="green")
     SECRET_KEY: str = Field(
         initial=lambda: base64.b64encode(os.urandom(60)).decode(),
         description="Used for cryptographic signing. "
         "https://docs.djangoproject.com/en/2.0/ref/settings/#secret-key",
     )
     MEDIA_ROOT: str = Field(default=str(BASE_DIR / "media"))
-    # STATIC_ROOT: str = Field(default=str(BASE_DIR / "staticfiles"))
     STATIC_ROOT: str = Field(default=os.path.join(PROJECT_ROOT, 'staticfiles'))
 
     CACHE_BACKEND: str = Field(default="django.core.cache.backends.redis.RedisCache")
     CACHE_TTL: int = Field(default=(60 * 60 * 24 * 365))  # One year - cache "permanently" until cleared
-    # REDIS_PREFIX: str = Field(default="tangelo/")
-    # REDIS_URL: str = Field(default="redis://127.0.0.1:6379")
 
     EMAIL_BACKEND: str = Field(default="django.core.mail.backends.console.EmailBackend")
     EMAIL_HOST_PASSWORD: str = Field(default="", help="SMTP email pass")

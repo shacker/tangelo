@@ -7,7 +7,7 @@ from .config import config  # Load secrets from settings.conf
 config.load()
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Root paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -15,16 +15,12 @@ SECRET_KEY = config.SECRET_KEY
 DEBUG = config.DEBUG
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
-
-# Application definition
-
 DATABASES = {"default": dj_database_url.parse(config.DATABASE_URL)}
 
 # Static and media files (CSS, JavaScript, Images)
 STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
 STATIC_URL = "/static/"
 
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles') # old
 STATIC_ROOT = config.STATIC_ROOT
 MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
