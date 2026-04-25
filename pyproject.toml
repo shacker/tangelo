@@ -10,7 +10,6 @@ dependencies = [
     "django-crispy-forms",
     "crispy-bootstrap4",
     "django-extensions",
-    "django-jsoneditor",
     "django-markdownify",
     "fabric",
     "flake8",

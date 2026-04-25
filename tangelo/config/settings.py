@@ -19,7 +19,6 @@ MEDIA_ROOT = config.MEDIA_ROOT
 MEDIA_URL = "/media/"
 
 INSTALLED_APPS = [
-    # "django_light",  # Disable admin dark mode
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -29,10 +28,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "gallery",
     "markdownify.apps.MarkdownifyConfig",
-    # "adminsortable2",
     "crispy_forms",
     "crispy_bootstrap4",
-    # "jsoneditor",
 ]
 
 MIDDLEWARE = [
@@ -159,8 +156,3 @@ EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.dreamhost.com'
 EMAIL_HOST_USER = 'gmailsender@birdhouse.org'
 EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
-
-# JS and CSS for Admin JSON editor
-# Check for upgrades at https://cdnjs.com/libraries/jsoneditor
-JSON_EDITOR_JS = "https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.7.4/jsoneditor.min.js"
-JSON_EDITOR_CSS = "https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.7.4/jsoneditor.min.css"

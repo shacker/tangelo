@@ -1,9 +1,6 @@
 from django.contrib import admin
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
-from django.db import models
-from jsoneditor.forms import JSONEditor
-
 from gallery.models import Album, Image, SimplePage
 
 
@@ -29,7 +26,6 @@ class ImageAdmin(admin.ModelAdmin):
     actions = [flush_image_cache]
     ordering = ["-taken",]
     search_fields = ("title", "flickr_id")
-    formfield_overrides = {models.JSONField: {"widget": JSONEditor()}}
 
 
 class AlbumAdmin(admin.ModelAdmin):

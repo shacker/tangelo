@@ -86,7 +86,6 @@ Key env/config vars: `DATABASE_URL`, `REDIS_URL`, `FLICKR_API_KEY`, `FLICKR_API_
 - `goodconf` — YAML + env var config management
 - `django-extensions` — TimeStampedModel, shell_plus
 <!-- - `adminsortable2` — drag-drop ordering in admin -->
-- `jsoneditor` — visual editing of raw API JSON in Image admin
 - `markdownify` — markdown rendering in templates
 - `crispy-forms` (Bootstrap 4) — contact form
 - `fabric` — deployment automation
