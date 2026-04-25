@@ -7,10 +7,7 @@ from .config import config  # Load secrets from settings.conf
 config.load()
 
 
-# Project paths
-BASE_DIR = config.BASE_DIR
 PROJECT_ROOT = config.PROJECT_ROOT
-
 SECRET_KEY = config.SECRET_KEY
 DEBUG = config.DEBUG
 ALLOWED_HOSTS = config.ALLOWED_HOSTS

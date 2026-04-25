@@ -4,9 +4,8 @@ from pathlib import Path
 
 from goodconf import Field, GoodConf
 
-# Make these the same as in main settings:
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 class AppConfig(GoodConf):
@@ -23,8 +22,8 @@ class AppConfig(GoodConf):
         description="Used for cryptographic signing. "
         "https://docs.djangoproject.com/en/2.0/ref/settings/#secret-key",
     )
-    MEDIA_ROOT: str = Field(default=str(BASE_DIR / "media"))
-    STATIC_ROOT: str = Field(default=os.path.join(BASE_DIR, 'staticfiles'))
+    MEDIA_ROOT: str = Field(default=str(PROJECT_ROOT / "tangelo" / "media"))
+    STATIC_ROOT: str = Field(default=str(PROJECT_ROOT / "staticfiles"))
 
     CACHE_BACKEND: str = Field(default="django.core.cache.backends.redis.RedisCache")
     CACHE_TTL: int = Field(default=(60 * 60 * 24 * 365))  # One year - cache "permanently" until cleared
