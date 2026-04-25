@@ -422,6 +422,18 @@ wheels = [
 ]
 
 [[package]]
+name = "django-jsoneditor"
+version = "0.2.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e9/1a/380d39fd4b5dadc2a899d35c1e2b1627237d131eb05a94bf6d14f9bed8a3/django-jsoneditor-0.2.4.tar.gz", hash = "sha256:1d3dfca28f047feefa6ebc6f9541179eb815fb459b006faf3fb8d0fb2197d2df", size = 367495, upload-time = "2023-02-15T09:47:58.762Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b5/80/3c7ac534e511f3c88d8c25b233bcf0836a4681a5b0f4f7ec5f0f16cab91b/django_jsoneditor-0.2.4-py2.py3-none-any.whl", hash = "sha256:d7a639a7251e376126b5be64ea588c925c7a40d45e0e212f66ef475d2f0f90bb", size = 372962, upload-time = "2023-02-15T09:47:55.732Z" },
+]
+
+[[package]]
 name = "django-markdownify"
 version = "0.9.6"
 source = { registry = "https://pypi.org/simple" }
@@ -952,6 +964,7 @@ dependencies = [
     { name = "django" },
     { name = "django-crispy-forms" },
     { name = "django-extensions" },
+    { name = "django-jsoneditor" },
     { name = "django-markdownify" },
     { name = "fabric" },
     { name = "flake8" },
@@ -973,6 +986,7 @@ requires-dist = [
     { name = "django" },
     { name = "django-crispy-forms" },
     { name = "django-extensions" },
+    { name = "django-jsoneditor", specifier = ">=0.2.4" },
     { name = "django-markdownify" },
     { name = "fabric" },
     { name = "flake8" },

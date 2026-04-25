@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
+    "jsoneditor",
     "gallery",
     "markdownify.apps.MarkdownifyConfig",
     "crispy_forms",

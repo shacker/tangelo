@@ -20,4 +20,5 @@ dependencies = [
     "psycopg2-binary",
     "redis",
     "ruamel.yaml",
+    "django-jsoneditor>=0.2.4",
 ]
