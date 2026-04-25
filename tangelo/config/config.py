@@ -5,7 +5,7 @@ from pathlib import Path
 from goodconf import Field, GoodConf
 
 # Make these the same as in main settings:
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 

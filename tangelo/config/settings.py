@@ -7,9 +7,9 @@ from .config import config  # Load secrets from settings.conf
 config.load()
 
 
-# Root paths
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+# Project paths
+BASE_DIR = config.BASE_DIR
+PROJECT_ROOT = config.PROJECT_ROOT
 
 SECRET_KEY = config.SECRET_KEY
 DEBUG = config.DEBUG
