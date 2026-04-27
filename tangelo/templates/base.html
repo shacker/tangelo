@@ -55,6 +55,9 @@
             <a class="nav-item nav-link ml-2" href="{% url "page" "about" %}">About</a>
             <a class="nav-item nav-link ml-2" href="{% url "page" "prints" %}">Prints</a>
             <a class="nav-item nav-link ml-2" href="{% url "contact" %}">Contact</a>
+            {% if user.is_superuser %}
+              <a class="nav-item nav-link ml-2" href="{% url "add_image" %}">+ Add</a>
+            {% endif %}
 
           </div>
           <!-- Navbar Right Side -->

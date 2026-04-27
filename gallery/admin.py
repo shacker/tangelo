@@ -23,10 +23,10 @@ def flush_album_thumb_cache(modeladmin, request, queryset):
 
 class ImageAdmin(admin.ModelAdmin):
     fields = ("flickr_id", "album", "image_api_data", "title", "taken", "album_order")
-    list_display = ("title", "flickr_id", "album", "taken")
+    list_display = ("title", "flickr_id", "album", "taken", "created")
     list_filter = ("album",)
     actions = [flush_image_cache]
-    ordering = ["-taken",]
+    ordering = ["-created"]
     search_fields = ("title", "flickr_id")
     formfield_overrides = {models.JSONField: {"widget": JSONEditor()}}
 

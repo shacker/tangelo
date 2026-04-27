@@ -12,6 +12,7 @@ urlpatterns = [
     path("flush_cache/<int:flickr_id>", view=views.flush_cache, name="flush_cache"),
     path("refetch/<int:flickr_id>", view=views.refetch, name="refetch"),
     path("a/<str:slug>", view=views.album, name="album"),
+    path("add/", view=views.add_image, name="add_image"),
     path("contact/", view=views.contact, name="contact"),
     path("contact/success/", view=views.contact_success, name="contact_success"),
     path("", view=views.home, name="home"),

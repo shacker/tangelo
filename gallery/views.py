@@ -1,11 +1,13 @@
+import re
 from itertools import cycle
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 
-from gallery.forms import ContactForm
+from gallery.forms import AddImageForm, ContactForm
 from gallery.models import Album, Image, SimplePage
 
 
@@ -114,3 +116,36 @@ def refetch(request, flickr_id: int):
     img.refetch()
     img.save()
     return redirect(reverse("image", kwargs={"flickr_id": flickr_id}))
+
+
+@login_required
+def add_image(request):
+    """Superuser-only quick-add: paste a Flickr URL or ID, pick an album, done."""
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    error = None
+    form = AddImageForm()
+
+    if request.method == "POST":
+        form = AddImageForm(request.POST)
+        if form.is_valid():
+            raw = form.cleaned_data["flickr_url"].strip()
+            album = form.cleaned_data["album"]
+
+            match = re.search(r"flickr\.com/photos/[^/]+/(\d+)", raw)
+            if not match:
+                match = re.match(r"^(\d+)$", raw)
+
+            if match:
+                flickr_id = int(match.group(1))
+                try:
+                    img = Image(flickr_id=flickr_id, album=album)
+                    img.save()
+                    return redirect(reverse("image", kwargs={"flickr_id": flickr_id}))
+                except Exception as e:
+                    error = str(e)
+            else:
+                error = "Could not find a Flickr photo ID in that input."
+
+    return render(request, "add_image.html", {"form": form, "error": error})
