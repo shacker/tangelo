@@ -42,7 +42,7 @@ def album(request, slug: str):
     ctx = {
         "album": album,
         "columns": columns,
-        "og_img_url": album.cat_thumb.get_embed_url(size="b"),
+        "og_img_url": album.cat_thumb.get_embed_url(size="b") if album.cat_thumb else None,
     }
     return render(request, "album.html", context=ctx)
 
