@@ -14,4 +14,12 @@ class AddImageForm(forms.Form):
         label="Flickr URL or ID",
         help_text="Paste a full Flickr photo URL or just the numeric photo ID",
     )
-    album = forms.ModelChoiceField(queryset=Album.objects.all().order_by("title"))
+    albums = forms.ModelMultipleChoiceField(
+        queryset=Album.objects.all().order_by("title"),
+        widget=forms.SelectMultiple(attrs={
+            "class": "selectpicker",
+            "data-live-search": "true",
+            "data-style": "btn-outline-secondary",
+            "title": "Select albums…",
+        }),
+    )

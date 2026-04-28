@@ -27,7 +27,7 @@ def home(request):
 def album(request, slug: str):
     """Show about text and array of image thumbnails in this album"""
     album = get_object_or_404(Album, slug=slug)
-    images = Image.objects.filter(album=album).order_by("-taken")
+    images = Image.objects.filter(albums=album).order_by("-taken")
 
     # For Responsive Image Grid, we will always have four columns, but need to arrange the image set
     # in rows, respecting album image order left to right. So we set up four lists - one for each column.
@@ -131,7 +131,7 @@ def add_image(request):
         form = AddImageForm(request.POST)
         if form.is_valid():
             raw = form.cleaned_data["flickr_url"].strip()
-            album = form.cleaned_data["album"]
+            albums = form.cleaned_data["albums"]
 
             match = re.search(r"flickr\.com/photos/[^/]+/(\d+)", raw)
             if not match:
@@ -140,8 +140,9 @@ def add_image(request):
             if match:
                 flickr_id = int(match.group(1))
                 try:
-                    img = Image(flickr_id=flickr_id, album=album)
+                    img = Image(flickr_id=flickr_id)
                     img.save()
+                    img.albums.set(albums)
                     return redirect(reverse("image", kwargs={"flickr_id": flickr_id}))
                 except Exception as e:
                     error = str(e)

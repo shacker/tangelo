@@ -77,10 +77,9 @@ class Image(TimeStampedModel):
         help_text="Datetime when image was captured, as reported by Flickr API.",
     )
 
-    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    albums = models.ManyToManyField(Album, blank=True, related_name="images")
 
-    # Since an image can belong to more than one category, album_order is ambiguous when
-    # image is in multiple categories, but letting that slide for now...
+    # album_order is ambiguous when image is in multiple albums, but letting that slide...
     album_order = models.IntegerField(
         help_text="Controls ordering of image within albums, and next/prev links.",
         blank=True,  # but not null=True!
@@ -181,21 +180,19 @@ class Image(TimeStampedModel):
         return embed_url
 
     def get_prev_next_ids(self):
-        """Given an Image instance, finds the previous and next
-            Image IDs in an album, based on `taken` (date taken).
-            n.b. Originally written to order by manual `album_order`
-            but decided I preferred simple auto date ordering to keep things fresh.
+        """Finds prev/next image IDs in the first album this image belongs to.
 
-        Returns:
-            {"prev": prev_id, "next": next_id}
-            Either of these can be None if there is no previous or next.
+        Returns: {"prev": prev_id, "next": next_id} — either can be None.
         """
 
         next_id = None
         prev_id = None
 
-        # Start with a queryset of all images in this image's album, except self
-        qs = Image.objects.filter(album=self.album).exclude(flickr_id=self.flickr_id)
+        album = self.albums.first()
+        if album is None:
+            return {"prev": None, "next": None}
+
+        qs = Image.objects.filter(albums=album).exclude(flickr_id=self.flickr_id)
 
         next_id_qs = qs.filter(taken__lt=self.taken).order_by("-taken")
         if next_id_qs.exists():

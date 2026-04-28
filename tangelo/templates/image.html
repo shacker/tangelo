@@ -49,7 +49,7 @@
       {{ img_data.description|safe }}<br />
     {% endif %}
     <small>
-      In <a href="{% url 'album' img.album.slug %}">{{ img.album.title }}</a>.
+      In {% for album in img.albums.all %}<a href="{% url 'album' album.slug %}">{{ album.title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}.
       Taken: {{ img.taken|date }}
     </small>
   </p>
