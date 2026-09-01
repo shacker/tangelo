@@ -74,10 +74,17 @@ def simple_page(request, page_slug: str):
 
 
 def contact(request):
+    """Show and process the contact form, dropping likely bot submissions."""
     if request.method == "GET":
         form = ContactForm()
     else:
         form = ContactForm(request.POST)
+
+        # A tripped spam trap gets the success page but sends no mail, so a bot
+        # cannot tell which field gave it away.
+        if set(form.errors) & {"website", "timestamp"}:
+            return redirect("contact_success")
+
         if form.is_valid():
             subject = "Message from shacker.net: " + form.cleaned_data["subject"]
             your_email = form.cleaned_data["your_email"]

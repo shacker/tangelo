@@ -5,6 +5,15 @@
 
 {% block content %}
 
+    {# Honeypot: pushed off-screen so people never see or tab into it. #}
+    <style>
+        #div_id_website {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+        }
+    </style>
+
     <h1>Contact</h1>
 
     <p>Thoughts on this site, or these photos? Interested in ordering a print? Drop me a line! </p>
