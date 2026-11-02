@@ -1,4 +1,7 @@
 import logging
+import math
+import random
+import re
 
 import flickrapi
 from dateutil import parser
@@ -6,9 +9,9 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.validators import RegexValidator
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
-
 
 log = logging.getLogger(__name__)
 
@@ -239,3 +242,261 @@ class SimplePage(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.title
+
+
+# ### FRAME INVENTORY ###
+# Tracks handmade/vintage frames married with prints. Mirrors the "Frames"
+# spreadsheet (Prints + Old metal prints sheets). Lookup models below hold
+# the option lists for Price, State, Location, and FrameType.
+
+
+DEFAULT_TAG_COLOR = "#e8eaed"
+
+
+def tag_color_field():
+    """Background color for this option's tag in the /frames grid."""
+    return models.CharField(
+        max_length=7,
+        default=DEFAULT_TAG_COLOR,
+        validators=[RegexValidator(r"^#[0-9a-fA-F]{6}$", "Use a hex color like #b7e1cd.")],
+        help_text="Tag color in the frames grid.",
+    )
+
+
+class Price(TimeStampedModel):
+    """A price point offered for framed prints. "Unset" in the spreadsheet
+    is represented by a null Frame.price, not a row here."""
+
+    amount = models.PositiveIntegerField(unique=True, help_text="Price in whole US dollars.")
+    color = tag_color_field()
+
+    class Meta:
+        ordering = ["amount"]
+
+    def __str__(self) -> str:
+        return f"${self.amount}"
+
+
+class FrameState(TimeStampedModel):
+    """Workflow state for a frame (Done, Needs mat, Redo, etc.).
+    A frame can hold several states at once."""
+
+    name = models.CharField(max_length=60, unique=True)
+    color = tag_color_field()
+    order = models.IntegerField(
+        default=0, help_text="Controls display order of states in admin lists."
+    )
+
+    class Meta:
+        ordering = ["order", "name"]
+        verbose_name = "frame state"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class FrameType(TimeStampedModel):
+    """Kind of frame: Metal, Handmade, Vintage, Paper, etc."""
+
+    name = models.CharField(max_length=60, unique=True)
+    color = tag_color_field()
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "frame type"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class AspectRatio(TimeStampedModel):
+    """Standard print aspect ratio (1:1, 5:4, 3:2, ...), long side : short side."""
+
+    name = models.CharField(max_length=20, unique=True, help_text='e.g. "3:2".')
+    ratio = models.DecimalField(
+        max_digits=6, decimal_places=3, help_text="Long side / short side, e.g. 1.5 for 3:2."
+    )
+    color = tag_color_field()
+
+    class Meta:
+        ordering = ["ratio"]
+        verbose_name = "aspect ratio"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+ASPECT_TEXT = re.compile(r"(\d+(?:\.\d+)?)\s*[:x\u00d7/]\s*(\d+(?:\.\d+)?)")
+
+
+def parse_aspect(text: str):
+    """Ratio (long/short, >= 1) from text like "5:4", "1.37:1", "4:5 vertical"; else None."""
+    m = ASPECT_TEXT.search(text or "")
+    if not m:
+        return None
+    a, b = float(m.group(1)), float(m.group(2))
+    if not a or not b:
+        return None
+    return max(a, b) / min(a, b)
+
+
+def closest_aspect_ratio(value):
+    """The AspectRatio closest to a numeric ratio (compared on a log scale), or None."""
+    if not value:
+        return None
+    return min(
+        AspectRatio.objects.all(), key=lambda r: abs(math.log(value / float(r.ratio))), default=None
+    )
+
+
+def nearest_aspect_ratio(text: str):
+    """The AspectRatio closest to the ratio in text like "5:4" or "1.37:1", or None."""
+    return closest_aspect_ratio(parse_aspect(text))
+
+
+# A dimension: decimal, whole + fraction ("14 7/16"), or bare fraction.
+_DIM_NUM = r"\d+(?:\.\d+)?(?:\s+\d+/\d+)?|\d+/\d+"
+DIMENSIONS_TEXT = re.compile(rf"({_DIM_NUM})\s*(?:\"|in)?\s*[xX\u00d7]\s*({_DIM_NUM})")
+
+
+def _dim_value(text: str) -> float:
+    total = 0.0
+    for part in text.split():
+        if "/" in part:
+            num, den = part.split("/")
+            total += float(num) / float(den) if float(den) else 0.0
+        else:
+            total += float(part)
+    return total
+
+
+def parse_dimensions(text: str):
+    """Ratio (long/short) from dimensions like "14 7/16 x 9" or "12x 8"; else None."""
+    m = DIMENSIONS_TEXT.search(text or "")
+    if not m:
+        return None
+    a, b = _dim_value(m.group(1)), _dim_value(m.group(2))
+    return max(a, b) / min(a, b) if a and b else None
+
+
+def aspect_from_dimensions(image_dimension: str, rabbet_size: str):
+    """Aspect from the image dimension, falling back to the rabbet size."""
+    value = parse_dimensions(image_dimension) or parse_dimensions(rabbet_size)
+    return closest_aspect_ratio(value)
+
+
+class Location(TimeStampedModel):
+    """Where a framed print currently lives (Home, a venue, gifted, etc.)."""
+
+    name = models.CharField(max_length=120, unique=True)
+    color = tag_color_field()
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self) -> str:
+        return self.name
+
+
+def default_location():
+    """Default Frame.location to "Home", if that Location exists."""
+    loc = Location.objects.filter(name="Home").first()
+    return loc.pk if loc else None
+
+
+def generate_photo_id() -> int:
+    """Return a random five-digit Photo ID not already used by any Frame.
+    Used as the field default, so the admin "add" form is pre-filled."""
+    used = set(Frame.objects.values_list("photo_id", flat=True))
+    available = [n for n in range(10000, 100000) if n not in used]
+    if not available:
+        raise ValueError("All five-digit Photo IDs are in use.")
+    return random.choice(available)
+
+
+class Frame(TimeStampedModel):
+    """A handmade or vintage frame, usually married with one of my prints."""
+
+    title = models.CharField(max_length=200, blank=True)
+    lr_id = models.CharField(
+        "LR ID", max_length=100, blank=True, help_text="Lightroom identifier/filename."
+    )
+    price = models.ForeignKey(
+        Price,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        related_name="frames",
+        help_text="Leave blank if price is unset.",
+    )
+    image = models.ForeignKey(
+        Image,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="frames",
+        verbose_name="Flickr Image",
+        help_text="Gallery image this frame's print was made from. Search by title or Flickr ID.",
+    )
+    photo_id = models.PositiveIntegerField(
+        "Photo ID",
+        unique=True,
+        default=generate_photo_id,
+        help_text="Unused five-digit ID, auto-generated for new frames.",
+    )
+    frame = models.CharField(max_length=200, blank=True, help_text="Frame description.")
+    frame_type = models.ForeignKey(
+        FrameType,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        related_name="frames",
+    )
+    states = models.ManyToManyField(FrameState, blank=True, related_name="frames")
+    image_dimension = models.CharField(
+        max_length=50, blank=True, help_text='Free text, e.g. "18 x 12".'
+    )
+    rabbet_size = models.CharField(
+        max_length=50, blank=True, help_text='Free text, e.g. "14 7/16 x 9".'
+    )
+    aspect = models.ForeignKey(
+        AspectRatio,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        related_name="frames",
+        help_text="Computed from Image dimension (or Rabbet size) unless set by hand.",
+    )
+    aspect_manual = models.BooleanField(
+        "Aspect set by hand",
+        default=False,
+        help_text="Checked: keep the chosen aspect. Unchecked: recompute it from the dimensions.",
+    )
+    notes = models.TextField(blank=True)
+    print_cost = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.PROTECT,
+        default=default_location,
+        blank=True,
+        null=True,
+        related_name="frames",
+    )
+    print_order = models.CharField(
+        max_length=100, blank=True, help_text='Vendor + order number, e.g. "Luma 10001872570".'
+    )
+
+    class Meta:
+        ordering = ["title"]
+
+    def __str__(self) -> str:
+        return self.title or f"Untitled ({self.lr_id or self.photo_id or self.pk})"
+
+    def save(self, *args, **kwargs):
+        """Unless the aspect was set by hand, keep it in step with the dimensions."""
+        if not self.aspect_manual:
+            self.aspect = aspect_from_dimensions(self.image_dimension, self.rabbet_size)
+            update_fields = kwargs.get("update_fields")
+            if update_fields is not None:
+                kwargs["update_fields"] = set(update_fields) | {"aspect"}
+        super().save(*args, **kwargs)

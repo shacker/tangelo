@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ block.super }} - Frame inventory{% endblock title %}
+{% block main_class %}container-fluid px-4{% endblock main_class %}
+
+{% block content %}
+  <link rel="stylesheet" href="{% static 'vendor/tabulator/tabulator_bootstrap4.min.css' %}">
+  <style>
+    .grid-toolbar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: .75rem; }
+    .grid-toolbar .form-control { width: auto; }
+    .grid-toolbar #grid-search { min-width: 16rem; }
+    .grid-count { color: #6c757d; margin-left: auto; white-space: nowrap; }
+    #frames-grid { font-size: .85rem; }
+    #frames-grid .tabulator-cell.cell-saved { background: #d4edda !important; transition: background .2s; }
+    #frames-grid .tabulator-cell.cell-error { background: #f8d7da !important; }
+    #frames-grid .tabulator-cell.cell-saving { opacity: .5; }
+    /* Color-coded option tags (colors are set per option in the admin). */
+    .tag { display: inline-block; padding: 1px 8px; margin: 1px 3px 1px 0; border-radius: 10px;
+           line-height: 1.5; white-space: nowrap; }
+    /* Computed (not hand-picked) aspect: dashed outline + italic. */
+    .tag-auto { outline: 1.5px dashed #5f6368; outline-offset: -2px; font-style: italic; }
+    .grid-toast { position: fixed; right: 1rem; bottom: 1rem; z-index: 2000; max-width: 28rem; display: none; }
+  </style>
+
+  <h1 class="h3 mb-3">Frame inventory</h1>
+
+  <div class="grid-toolbar">
+    <input type="search" id="grid-search" class="form-control form-control-sm"
+           placeholder="Search title, LR ID, photo ID, image, frame, notes, print order…">
+    <select id="filter-state" class="form-control form-control-sm"><option value="">State: all</option></select>
+    <select id="filter-location" class="form-control form-control-sm">
+      <option value="">Location: all</option><option value="none">(no location)</option>
+    </select>
+    <select id="filter-price" class="form-control form-control-sm">
+      <option value="">Price: all</option><option value="none">Unset</option>
+    </select>
+    <select id="filter-type" class="form-control form-control-sm">
+      <option value="">Type: all</option><option value="none">(no type)</option>
+    </select>
+    <select id="filter-aspect" class="form-control form-control-sm">
+      <option value="">Aspect: all</option><option value="none">(no aspect)</option>
+    </select>
+    <button id="filter-clear" class="btn btn-sm btn-outline-secondary">Clear filters</button>
+    <button id="add-row" class="btn btn-sm btn-primary">+ Add frame</button>
+    <button id="download-csv" class="btn btn-sm btn-outline-secondary">Download CSV</button>
+    <span class="grid-count" id="grid-count"></span>
+  </div>
+
+  <div id="frames-grid"></div>
+  <div id="grid-toast" class="alert grid-toast" role="alert"></div>
+
+  {{ grid_data|json_script:"grid-data" }}
+{% endblock content %}
+
+{% block extra_js %}
+  <script src="{% static 'vendor/tabulator/tabulator.min.js' %}"></script>
+  <script>
+  (function () {
+    const DATA = JSON.parse(document.getElementById("grid-data").textContent);
+    const CSRF = "{{ csrf_token }}";
+
+    // ### Lookup helpers ###
+    const labelMap = (opts) => Object.fromEntries(opts.map((o) => [String(o.value), o.label]));
+    const PRICE = labelMap(DATA.prices);
+    const LOCATION = labelMap(DATA.locations);
+    const FRAME_TYPE = labelMap(DATA.frame_types);
+    const ASPECT = labelMap(DATA.aspects);
+    const STATE = labelMap(DATA.states);
+    // Tag colors: value -> background, per lookup. Text goes dark or white by contrast.
+    const colorMap = (opts) => Object.fromEntries(opts.map((o) => [String(o.value), o.color]));
+    const COLORS = {
+      price: colorMap(DATA.prices), location: colorMap(DATA.locations),
+      frame_type: colorMap(DATA.frame_types), states: colorMap(DATA.states),
+      aspect: colorMap(DATA.aspects),
+    };
+    function textColor(hex) {
+      const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+      return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? "#202124" : "#ffffff";
+    }
+    function tag(kind, value, label) {
+      if (label == null || label === "") return "";
+      const bg = COLORS[kind][String(value)];
+      if (!bg) return escapeHtml(label);
+      return '<span class="tag" style="background:' + bg + ";color:" + textColor(bg) + '">' +
+        escapeHtml(label) + "</span>";
+    }
+    // Colors the choices in a column's dropdown editor too.
+    const tagItems = (kind) => (label, value) => tag(kind, value, label) || escapeHtml(label);
+    const STATE_ORDER = Object.fromEntries(DATA.states.map((s, i) => [String(s.value), i]));
+
+    const priceLabel = (v) => (v == null || v === "" ? "" : PRICE[v] || "?");
+    const locationLabel = (v) => (v == null || v === "" ? "" : LOCATION[v] || "?");
+    // Image labels come with each row; ones picked in the editor are cached here.
+    const IMAGE_LABELS = Object.fromEntries(
+      DATA.rows.filter((r) => r.image != null).map((r) => [r.image, r.image_label]));
+    const imageLabel = (v, row) => (v == null || v === "" ? "" :
+      (row && row.image === v && row.image_label) || IMAGE_LABELS[v] || "#" + v);
+    const typeLabel = (v) => (v == null || v === "" ? "" : FRAME_TYPE[v] || "?");
+    const aspectLabel = (v) => (v == null || v === "" ? "" : ASPECT[v] || "?");
+    // Aspect sorts by ratio (the options arrive ordered square to wide).
+    const ASPECT_ORDER = Object.fromEntries(DATA.aspects.map((a, i) => [String(a.value), i]));
+    const stateLabels = (v) =>
+      (v || []).slice().sort((a, b) => STATE_ORDER[a] - STATE_ORDER[b]).map((id) => STATE[id]).join(", ");
+
+    const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) =>
+      ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+
+    // Price sorts by amount, with Unset first.
+    const PRICE_AMOUNT = Object.fromEntries(DATA.prices.map((p) => [String(p.value), parseInt(p.label.slice(1), 10)]));
+
+    // ### Toast ###
+    const toast = document.getElementById("grid-toast");
+    let toastTimer;
+    function showToast(msg, kind) {
+      toast.className = "alert grid-toast alert-" + (kind || "danger");
+      toast.textContent = msg;
+      toast.style.display = "block";
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => (toast.style.display = "none"), kind === "danger" ? 6000 : 2500);
+    }
+
+    function flash(cell, cls) {
+      const el = cell.getElement();
+      el.classList.add(cls);
+      setTimeout(() => el.classList.remove(cls), cls === "cell-error" ? 1500 : 700);
+    }
+
+    async function post(url, body) {
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json", "X-CSRFToken": CSRF},
+        body: JSON.stringify(body || {}),
+        credentials: "same-origin",
+      });
+      let json = {};
+      try { json = await resp.json(); } catch (e) { /* non-JSON error page */ }
+      if (!resp.ok) throw Object.assign(new Error(json.error || "Save failed (" + resp.status + ")"), {json});
+      return json;
+    }
+
+    // ### Save on edit ###
+    async function saveCell(cell) {
+      const field = cell.getField();
+      const row = cell.getRow();
+      const el = cell.getElement();
+      const title = row.getData().title || "Untitled";
+      el.classList.add("cell-saving");
+      try {
+        const url = DATA.urls.update.replace("/0/", "/" + row.getData().id + "/");
+        const res = await post(url, {field, value: cell.getValue()});
+        await row.update(res.row);       // server-normalized values (trimmed text, decimals)
+        flash(cell, "cell-saved");
+      } catch (err) {
+        if (err.json && err.json.row) await row.update(err.json.row);
+        else cell.restoreOldValue();
+        flash(cell, "cell-error");
+        showToast(title + " — " + field + ": " + err.message);
+      } finally {
+        el.classList.remove("cell-saving");
+      }
+    }
+
+    // ### Columns ###
+    const text = (title, field, extra) => Object.assign(
+      {title, field, editor: "input", headerSort: true, width: 140}, extra || {});
+    const longText = (title, field, width) => ({
+      title, field, width: width || 220, editor: "textarea", formatter: "textarea",
+      headerSort: true,
+    });
+    const listEditorParams = (opts, extra) => Object.assign(
+      {values: opts, autocomplete: true, listOnEmpty: true, clearable: true}, extra || {});
+
+    const columns = [
+      {
+        title: "", field: "admin_url", width: 34, frozen: true, headerSort: false, hozAlign: "center",
+        formatter: (cell) => '<a href="' + cell.getValue() + '" title="Open in admin">&#8599;</a>',
+        download: false,
+      },
+      text("Title", "title", {frozen: true, width: 230}),
+      text("Photo ID", "photo_id", {frozen: true, width: 90, editor: "number", sorter: "number",
+        editorParams: {min: 1, step: 1}}),
+      {
+        // Search-as-you-type against /frames/images/ (title or Flickr ID).
+        title: "Flickr Image", field: "image", width: 240,
+        editor: "list",
+        editorParams: {
+          autocomplete: true,
+          filterRemote: true,
+          filterDelay: 250,
+          listOnEmpty: true,
+          emptyValue: null,
+          placeholderLoading: "Searching…",
+          placeholderEmpty: "No matching images",
+          valuesLookup: async (cell, term) => {
+            const url = DATA.urls.image_search + "?q=" + encodeURIComponent(term || "");
+            const resp = await fetch(url, {credentials: "same-origin"});
+            const results = (await resp.json()).results || [];
+            results.forEach((r) => (IMAGE_LABELS[r.value] = r.label));
+            // Keep the current image in the list: if it's missing, clicking away
+            // without picking anything would clear the link.
+            const current = cell.getValue();
+            if (current != null && !results.some((r) => r.value === current)) {
+              results.unshift({value: current, label: imageLabel(current, cell.getRow().getData())});
+            }
+            // On open, Tabulator pre-fills the input with the current label; select it
+            // so typing replaces it (otherwise the search term gets appended to it).
+            if (!term) {
+              setTimeout(() => {
+                const input = cell.getElement().querySelector("input");
+                if (input) input.select();
+              });
+            }
+            return [{label: "(none)", value: null}].concat(results);
+          },
+        },
+        formatter: (cell) => {
+          const label = imageLabel(cell.getValue(), cell.getRow().getData());
+          cell.getElement().title = label;
+          return escapeHtml(label);
+        },
+        sorter: (a, b, aRow, bRow) =>
+          imageLabel(a, aRow.getData()).localeCompare(imageLabel(b, bRow.getData())),
+        accessorDownload: (v, data) => imageLabel(v, data),
+      },
+      text("LR ID", "lr_id", {width: 160}),
+      {
+        title: "Price", field: "price", width: 85, hozAlign: "right",
+        editor: "list", editorParams: listEditorParams([{label: "Unset", value: ""}].concat(DATA.prices),
+          {itemFormatter: tagItems("price")}),
+        formatter: (cell) => tag("price", cell.getValue(), priceLabel(cell.getValue())),
+        sorter: (a, b) => (PRICE_AMOUNT[a] || -1) - (PRICE_AMOUNT[b] || -1),
+        accessorDownload: (v) => priceLabel(v),
+      },
+      {
+        title: "States", field: "states", width: 190,
+        editor: "list", editorParams: listEditorParams(DATA.states,
+          {multiselect: true, autocomplete: false, listOnEmpty: false, itemFormatter: tagItems("states")}),
+        formatter: (cell) => {
+          cell.getElement().style.whiteSpace = "normal";  // wrap so every tag shows
+          return (cell.getValue() || []).slice()
+            .sort((a, b) => STATE_ORDER[a] - STATE_ORDER[b])
+            .map((id) => tag("states", id, STATE[id])).join("");
+        },
+        sorter: (a, b) => stateLabels(a).localeCompare(stateLabels(b)),
+        accessorDownload: (v) => stateLabels(v),
+      },
+      text("Frame", "frame", {width: 220}),
+      {
+        title: "Type", field: "frame_type", width: 105,
+        editor: "list", editorParams: listEditorParams([{label: "(none)", value: ""}].concat(DATA.frame_types),
+          {itemFormatter: tagItems("frame_type")}),
+        formatter: (cell) => tag("frame_type", cell.getValue(), typeLabel(cell.getValue())),
+        sorter: (a, b) => typeLabel(a).localeCompare(typeLabel(b)),
+        accessorDownload: (v) => typeLabel(v),
+      },
+      text("Image dim.", "image_dimension", {width: 105}),
+      text("Rabbet size", "rabbet_size", {width: 105}),
+      {
+        title: "Aspect", field: "aspect", width: 90,
+        editor: "list", editorParams: listEditorParams([{label: "(none)", value: ""}].concat(DATA.aspects),
+          {itemFormatter: tagItems("aspect")}),
+        formatter: (cell) => {
+          // Computed aspects get a dashed outline; hand-picked ones look like other tags.
+          const row = cell.getRow().getData(), v = cell.getValue();
+          const auto = v != null && !row.aspect_manual;
+          cell.getElement().title = v == null ? "" : auto
+            ? "Computed from " + (row.image_dimension ? "image dimension" : "rabbet size") + ". Pick one to override."
+            : "Set by hand. Choose (none) to compute from dimensions again.";
+          const html = tag("aspect", v, aspectLabel(v));
+          return auto ? html.replace('class="tag"', 'class="tag tag-auto"') : html;
+        },
+        sorter: (a, b) => (ASPECT_ORDER[a] ?? -1) - (ASPECT_ORDER[b] ?? -1),
+        accessorDownload: (v) => aspectLabel(v),
+      },
+      longText("Notes", "notes", 260),
+      text("Print cost", "print_cost", {width: 90, hozAlign: "right", sorter: "number",
+        editor: "number", editorParams: {min: 0, step: 0.01}}),
+      text("Print order", "print_order", {width: 160}),
+      {
+        title: "Location", field: "location", width: 170,
+        editor: "list", editorParams: listEditorParams([{label: "(none)", value: ""}].concat(DATA.locations),
+          {itemFormatter: tagItems("location")}),
+        formatter: (cell) => tag("location", cell.getValue(), locationLabel(cell.getValue())),
+        sorter: (a, b) => locationLabel(a).localeCompare(locationLabel(b)),
+        accessorDownload: (v) => locationLabel(v),
+      },
+    ];
+
+    const table = new Tabulator("#frames-grid", {
+      data: DATA.rows,
+      index: "id",
+      columns,
+      layout: "fitDataStretch",
+      height: "calc(100vh - 230px)",
+      initialSort: [{column: "title", dir: "asc"}],
+      persistence: {sort: true, columns: ["width"]},
+      persistenceID: "frames-grid",
+      // Tabulator's saved layout also restores column *order*, which would override
+      // reordering done here. Keep saved widths, but always use the order above.
+      persistenceReaderFunc: (id, type) => {
+        let data;
+        try { data = JSON.parse(localStorage.getItem(id + "-" + type)); } catch (e) { return false; }
+        if (type === "columns" && Array.isArray(data)) {
+          const saved = Object.fromEntries(data.map((c) => [c.field, c]));
+          data = columns.map((c) => saved[c.field]).filter(Boolean);
+        }
+        return data || false;
+      },
+      placeholder: "No frames match these filters.",
+    });
+
+    table.on("cellEdited", saveCell);
+
+    // ### Filters (same set as the admin: state, location, price, frame type + search) ###
+    const fillSelect = (sel, opts) => opts.forEach((o) => sel.add(new Option(o.label, o.value)));
+    const $ = (id) => document.getElementById(id);
+    fillSelect($("filter-state"), DATA.states);
+    fillSelect($("filter-location"), DATA.locations);
+    fillSelect($("filter-price"), DATA.prices);
+    fillSelect($("filter-type"), DATA.frame_types);
+    fillSelect($("filter-aspect"), DATA.aspects);
+
+    const SEARCH_FIELDS = ["title", "lr_id", "photo_id", "image_label", "frame", "notes", "print_order"];
+
+    function matches(row, f) {
+      if (f.state && !(row.states || []).map(String).includes(f.state)) return false;
+      if (f.location === "none" ? row.location != null : f.location && String(row.location) !== f.location) return false;
+      if (f.price === "none" ? row.price != null : f.price && String(row.price) !== f.price) return false;
+      if (f.type === "none" ? row.frame_type != null : f.type && String(row.frame_type) !== f.type) return false;
+      if (f.aspect === "none" ? row.aspect != null : f.aspect && String(row.aspect) !== f.aspect) return false;
+      if (f.q) {
+        const hay = SEARCH_FIELDS.map((k) => row[k] == null ? "" : String(row[k])).join("\n").toLowerCase();
+        if (!f.q.every((word) => hay.includes(word))) return false;
+      }
+      return true;
+    }
+
+    function applyFilters() {
+      const f = {
+        state: $("filter-state").value,
+        location: $("filter-location").value,
+        price: $("filter-price").value,
+        type: $("filter-type").value,
+        aspect: $("filter-aspect").value,
+        q: $("grid-search").value.toLowerCase().split(/\s+/).filter(Boolean),
+      };
+      const active = f.state || f.location || f.price || f.type || f.aspect || f.q.length;
+      if (active) table.setFilter((row) => matches(row, f));
+      else table.clearFilter();
+    }
+
+    function clearFilters() {
+      ["filter-state", "filter-location", "filter-price", "filter-type", "filter-aspect", "grid-search"].forEach((id) => ($(id).value = ""));
+      applyFilters();
+    }
+
+    ["filter-state", "filter-location", "filter-price", "filter-type", "filter-aspect"].forEach((id) =>
+      $(id).addEventListener("change", applyFilters));
+    let searchTimer;
+    $("grid-search").addEventListener("input", () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(applyFilters, 150);
+    });
+    $("filter-clear").addEventListener("click", clearFilters);
+
+    function updateCount() {
+      const shown = table.getDataCount("active");
+      const total = table.getDataCount();
+      $("grid-count").textContent = shown === total ? total + " frames" : shown + " of " + total + " frames";
+    }
+    table.on("dataFiltered", () => setTimeout(updateCount));
+    table.on("tableBuilt", updateCount);
+    table.on("rowAdded", () => setTimeout(updateCount));
+
+    // ### Add + download ###
+    $("add-row").addEventListener("click", async () => {
+      try {
+        const res = await post(DATA.urls.add);
+        clearFilters();
+        const row = await table.addRow(res.row, true);
+        await table.scrollToRow(row, "top", false);
+        row.getCell("title").edit();
+        showToast("Added frame with Photo ID " + res.row.photo_id + ".", "success");
+      } catch (err) {
+        showToast("Could not add frame: " + err.message);
+      }
+    });
+
+    $("download-csv").addEventListener("click", () => table.download("csv", "frames.csv"));
+  })();
+  </script>
+{% endblock extra_js %}

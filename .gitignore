@@ -303,6 +303,7 @@ tags
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
+!gallery/scripts/
 pyvenv.cfg
 pip-selfcheck.json
 

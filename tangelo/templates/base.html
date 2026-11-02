@@ -57,6 +57,7 @@
             <a class="nav-item nav-link ml-2" href="{% url "contact" %}">Contact</a>
             {% if user.is_superuser %}
               <a class="nav-item nav-link ml-2" href="{% url "add_image" %}">+ Add</a>
+              <a class="nav-item nav-link ml-2" href="{% url "frames_grid" %}">Inventory</a>
             {% endif %}
 
           </div>
@@ -68,7 +69,7 @@
       </div>
      </nav>
     </header>
-    <main role="main" class="container">
+    <main role="main" class="{% block main_class %}container{% endblock main_class %}">
      <div class="row">
       <div class="col-md-12">
          {%  if messages %}
