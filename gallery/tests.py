@@ -1,5 +1,7 @@
 import time
+from unittest import mock
 
+from django.contrib.auth.models import User
 from django.core import mail, signing
 from django.test import TestCase
 from django.urls import reverse
@@ -82,3 +84,31 @@ class ContactViewSpamTests(TestCase):
         response = self.client.post(reverse("contact"), data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(mail.outbox), 0)
+
+
+class NukeViewTests(TestCase):
+    """Cover the superuser-only Nuclear nav link."""
+
+    @mock.patch("gallery.views.nuclear")
+    def test_superuser_nukes(self, nuclear: mock.Mock) -> None:
+        """Superuser clears caches, lands on home, sees alert."""
+        User.objects.create_superuser("admin", "a@example.com", "pw")
+        self.client.login(username="admin", password="pw")
+        resp = self.client.get(reverse("nuclear"), follow=True)
+        nuclear.assert_called_once_with()
+        self.assertRedirects(resp, reverse("home"))
+        self.assertContains(resp, "All caches nuked.")
+
+    @mock.patch("gallery.views.nuclear")
+    def test_non_superuser_blocked(self, nuclear: mock.Mock) -> None:
+        """Regular user cannot nuke."""
+        User.objects.create_user("bob", "b@example.com", "pw")
+        self.client.login(username="bob", password="pw")
+        self.client.get(reverse("nuclear"))
+        nuclear.assert_not_called()
+
+    @mock.patch("gallery.views.nuclear")
+    def test_anonymous_blocked(self, nuclear: mock.Mock) -> None:
+        """Anonymous user cannot nuke."""
+        self.client.get(reverse("nuclear"))
+        nuclear.assert_not_called()

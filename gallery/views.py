@@ -2,6 +2,7 @@ import re
 from itertools import cycle
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import BadHeaderError, EmailMessage
 from django.http import HttpResponse
@@ -9,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from gallery.forms import AddImageForm, ContactForm
 from gallery.models import Album, Image, SimplePage
+from gallery.utils import nuclear
 
 
 def home(request):
@@ -123,6 +125,17 @@ def refetch(request, flickr_id: int):
     img.refetch()
     img.save()
     return redirect(reverse("image", kwargs={"flickr_id": flickr_id}))
+
+
+@login_required
+def nuke(request) -> HttpResponse:
+    """Superuser-only: clear all caches, then redirect home with an alert."""
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    nuclear()
+    messages.success(request, "All caches nuked.")
+    return redirect("home")
 
 
 @login_required

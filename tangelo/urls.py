@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
+
 from gallery import views, views_frames
 
 urlpatterns = [
@@ -10,6 +11,7 @@ urlpatterns = [
     path("p/<str:page_slug>", view=views.simple_page, name="page"),
     path("i/<int:flickr_id>", view=views.image, name="image"),
     path("flush_cache/<int:flickr_id>", view=views.flush_cache, name="flush_cache"),
+    path("nuclear/", view=views.nuke, name="nuclear"),
     path("refetch/<int:flickr_id>", view=views.refetch, name="refetch"),
     path("a/<str:slug>", view=views.album, name="album"),
     path("add/", view=views.add_image, name="add_image"),

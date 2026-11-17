@@ -15,8 +15,8 @@ class Command(BaseCommand):
             "-r",
             "--refetch",
             dest="refetch_images",
-            default=False,
-            help="If True, refetches image data",
+            action="store_true",
+            help="Also refetch Flickr API data for every image",
         )
 
     def handle(self, *args, **options) -> None:
